@@ -46,11 +46,16 @@ const cartOps = createSlice({
                 state.totalAmount = state.totalAmount - state.cartItems[index].price;
                 state.nbrOfItems -= 1;
             }
+        },
+        CLEARCART: (state) => {
+            state.cartItems = [];
+            state.totalAmount = 0;
+            state.nbrOfItems = 0;
         }
     }
 });
 
-export const { ADDITEMTOCART, INCREMENTITEM, DECREMENTITEM } = cartOps.actions;
+export const { ADDITEMTOCART, INCREMENTITEM, DECREMENTITEM, CLEARCART } = cartOps.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.cartOps;
