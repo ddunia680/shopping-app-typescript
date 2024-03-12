@@ -8,7 +8,7 @@ export const Footer = () => {
     <div className='flex flex-col justify-start items-start'>
         <p className='font-semibold'>Total Items {inCartCount}</p>
         <p className='font-semibold'>Total Price ${totalPrice.toFixed(2)}</p>
-        <p className='w-[100%] text-center text-sm'>Online shop 2024</p>
+        <p className='w-[100%] text-center text-sm'>Online shop &copy; 2024, All rights reserved</p>
     </div>
   )
 }
