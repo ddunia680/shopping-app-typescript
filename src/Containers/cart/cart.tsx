@@ -3,11 +3,8 @@ import { ArrowLeftIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { CartItem } from '../../Components/cartItem/cartItem';
 import Backdrop from '../../Components/Backdrop/backdrop';
 import { motion } from 'framer-motion';
-
-import appleWatch from '../../assets/pic1.png';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { CLEARCART } from '../../store/cart';
-// impot useAppDispatch
 
 interface enteredParam {
   closeModal: () => void,
@@ -71,7 +68,7 @@ export const Cart = ({ closeModal }: enteredParam) => {
               <p className='mx-auto'>Not Items in the cart</p> 
             : 
               cartItems.map(itm => (
-                <CartItem image={appleWatch} key={itm.id} id={itm.id} name={itm.name} pieces={itm.count} />
+                <CartItem image={itm.image} key={itm.id} id={itm.id} name={itm.name} pieces={itm.count} />
               ))}
               
           </div>

@@ -28,7 +28,7 @@ export const ItemElement = ({ id, name, pic, price, openModal }: itemProps) => {
     flex-col justify-evenly items-start rounded-xl duration-150 hover:duration-150'>
         <h2 className='font-bold my-[1rem]'>{name}</h2>
         <div className='bg-transparent w-[90%] h-[75%] rounded-xl overflow-hidden'>
-            <img src={pic} className='w-[100%] h-[100%] object-contain rounded-xl' alt="the product" />
+            <img src={pic} className='w-[100%] h-[100%] object-contain rounded-xl bg-white' alt="the product" />
         </div>
         <div className=''>
             <p>{price}</p>

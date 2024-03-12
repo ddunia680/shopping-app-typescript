@@ -3,12 +3,20 @@ import { ItemElement } from '../../Components/itemElement/itemElement';
 import appleWatch from '../../assets/pic1.png'
 import montBlanc from '../../assets/pic2.png';
 import applebra from '../../assets/pic3.png';
+import cartietBlue from '../../assets/cartier-blue.avif';
+import cartierGold from '../../assets/cartier-gold.webp';
+import casio from '../../assets/casio.jpg';
+import rolex from '../../assets/rolex.png';
 import { motion } from 'framer-motion';
 
 enum WATCH_IDS {
     APPLEWATCH,
     MONTBLANC,
-    APPLEBRA
+    APPLEBRA,
+    CARTIERBLUE,
+    CARTIERGOLD,
+    CASIO,
+    ROLEX,
 }
 
 const gridContainervariants = {
@@ -30,6 +38,10 @@ const theProducts = [
     { name: 'Apple Smart Watch', pic: appleWatch, price: 99.99, id: WATCH_IDS.APPLEWATCH }, 
     { name: 'Smart MontBlanc', pic: montBlanc, price: 39.99, id: WATCH_IDS.MONTBLANC  }, 
     { name: 'Apple Smart Pink', pic: applebra, price: 299.99, id: WATCH_IDS.APPLEBRA  },
+    { name: 'Cartier Square', pic: cartietBlue, price: 299.99, id: WATCH_IDS.CARTIERBLUE  },
+    { name: 'Cartier Gold', pic: cartierGold, price: 299.99, id: WATCH_IDS.CARTIERGOLD  },
+    { name: 'Edifice Casio', pic: casio, price: 299.99, id: WATCH_IDS.CASIO  },
+    { name: 'Black Rolex', pic: rolex, price: 299.99, id: WATCH_IDS.ROLEX  },
 ]
 
 export const ItemsWrapper = ({ openModal }: compPropType) => {

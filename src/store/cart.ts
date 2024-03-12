@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from "./store";
 
 interface cartStates {
-    cartItems: {id: number, name: string, count: number, price: number}[],
+    cartItems: {id: number, image: string, name: string, count: number, price: number}[],
     totalAmount: number,
     nbrOfItems: number
 }
