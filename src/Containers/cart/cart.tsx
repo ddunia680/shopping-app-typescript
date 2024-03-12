@@ -1,11 +1,12 @@
 // import React from 'react'
-import { ArrowLeftIcon } from '@heroicons/react/24/solid';
+import { ArrowLeftIcon, TrashIcon } from '@heroicons/react/24/solid';
 import { CartItem } from '../../Components/cartItem/cartItem';
 import Backdrop from '../../Components/Backdrop/backdrop';
 import { motion } from 'framer-motion';
 
 import appleWatch from '../../assets/pic1.png';
-import { useAppSelector } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
+import { CLEARCART } from '../../store/cart';
 // impot useAppDispatch
 
 interface enteredParam {
@@ -37,6 +38,12 @@ const slideInOut = {
 export const Cart = ({ closeModal }: enteredParam) => {
   const cartItems = useAppSelector(state => state.cartOps.cartItems);
   const totalPrice = useAppSelector(state => state.cartOps.totalAmount);
+  const dispatch = useAppDispatch();
+
+  const emptyCartHandler = () => {
+    dispatch(CLEARCART());
+    closeModal();
+  }
 
   return (
     <Backdrop onClick={() => closeModal()}>
@@ -47,13 +54,18 @@ export const Cart = ({ closeModal }: enteredParam) => {
         initial='hidden'
         animate='visible'
         exit='exit'
-        >
+      >
           <div className='flex flex-row justify-between items-center px-[0.5rem] py-[1rem] w-[100%]'>
               <ArrowLeftIcon title='back?' className='w-[1rem] text-blue-900 font-extrabold' onClick={() => closeModal()}/>
               <h2 className='font-extrabold text-lg text-purple-950'>My Cart</h2>
-              <p className='text-blue-200'>.</p>
+              { cartItems.length ? 
+                <TrashIcon title='Empty the cart?' className='w-[1.5rem] text-slate-900 font-extrabold hover:border-[1px] 
+               hover:border-slate-400 rounded-md duration-150 hover:duration-150' onClick={() => emptyCartHandler()}/>
+              : 
+                <p className='text-blue-200'>.</p>}
           </div>
-          <div className='bg-purple-300 w-[90%] mx-auto h-[60%] rounded-2xl flex flex-col justify-start items-start overflow-hidden p-[0.5rem] 
+          <div className='bg-purple-300 w-[90%] mx-auto h-[60%] rounded-2xl flex flex-col justify-start items-start overflow-hidden 
+          p-[0.5rem] 
           overflow-y-auto '>
             {!cartItems.length ?
               <p className='mx-auto'>Not Items in the cart</p> 
@@ -66,8 +78,11 @@ export const Cart = ({ closeModal }: enteredParam) => {
           {/* <p className='mx-auto font-semibold'>No Items In the Cart</p> */}
           <div className='h-[15%] w-[100%] bg-pink-950 rounded-tl-3xl rounded-tr-3xl px-[1rem] flex flex-row justify-evenly items-center 
           '>
-            <h2 className='text-white text-lg font-semibold'>Total Amount: <span className='text-orange-200'>$ {totalPrice.toFixed(2)}</span></h2>
-            <button className='px-[1rem] py-[0.5rem] bg-gradient-to-br from-emerald-400 to-emerald-700 text-white rounded-xl' >Oder Now</button>
+            <h2 className='text-white text-lg font-semibold'>Total Amount: <span className='text-orange-200'>$ {totalPrice.toFixed(2)}
+            </span></h2>
+            <button className='px-[1rem] py-[0.5rem] bg-gradient-to-br from-emerald-400 to-emerald-700 text-white rounded-xl' >
+              Oder Now
+            </button>
           </div>
 
       </motion.div>
