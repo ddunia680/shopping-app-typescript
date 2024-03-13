@@ -24,11 +24,11 @@ const slideInOut = {
         damping: 30,
         stiffness: 500
       },
-      exit: {
-        x: '100vw',
-        opacity: 0
-      },
-    }
+    },
+    exit: {
+      x: '100vw',
+      opacity: 0
+    },
 }
 
 

@@ -10,7 +10,7 @@ interface Parameters {
 const Backdrop: React.FC<Parameters> = ({ children, onClick }) => {
   return (
     <motion.div 
-      className='absolute top-0 left-0 h-[100vh] w-[100vw] bg-[#000000e1] flex justify-center items-center z-[100000]'
+      className='absolute top-0 left-0 h-[100vh] w-[100vw] bg-[#000000e9] flex justify-center items-center z-[100000]'
       onClick={onClick}
       initial={{ opacity: 0}} //at the beginning
       animate={{ opacity: 1 }} //when the animation begins
