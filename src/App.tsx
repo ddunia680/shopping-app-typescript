@@ -1,33 +1,37 @@
 
-import { ItemsWrapper } from "./Containers/itemsWrapper/itemsWrapper";
-import { Footer } from "./Containers/footer/footer";
+import { ItemsWrapper } from "./Components/itemsWrapper/itemsWrapper";
+import { Footer } from "./Components/footer/footer";
 import { useState } from "react";
-import { Cart } from "./Containers/cart/cart";
-import { Header } from "./Containers/header/header";
+import Modal from "./Components/Modal/modal";
+import { Header } from "./Components/header/header";
 
 import { AnimatePresence } from "framer-motion";
 
 
 function App() {
   const[showCart, setShowCart] = useState<boolean>(false);
+  const [showWishList, setShowWishList] = useState<boolean>(false);
   // console.log(showCart);
 
-  const openModal = () => setShowCart(true);
-  const closeModal = () => setShowCart(false);
+  const openCart = () => setShowCart(true);
+  const closeCart = () => setShowCart(false);
+
+  const openWishList = () => setShowWishList(true);
+  const closeWishList = () => setShowWishList(false);
 
   document.title = 'The Store AMST';
   
 
   return (
     <div className="relative w-[100vw] h-[100vh]">
-      <Header openModal={openModal} />
-      <ItemsWrapper openModal={openModal} />
+      <Header openModal={openCart} />
+      <ItemsWrapper openWishList={openWishList} openCart={openCart} />
       <Footer/>
       <AnimatePresence
         initial={false}
         mode='wait'
       >
-        { showCart && <Cart closeModal={closeModal} /> }
+        { (showCart || showWishList) && <Modal cart={showCart} closeCart={closeCart} closeWishlist={closeWishList} /> }
       </AnimatePresence>
       
     </div>

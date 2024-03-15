@@ -10,7 +10,7 @@ export const Header = ({ openModal }: enteredParam) => {
   const inCartCount = useAppSelector(state => state.cartOps.nbrOfItems);
   
   return (
-    <div className='h-[5.1rem] md:h-[7rem] bg-specialGray sticky top-0 left-0 w-[100%] md:flex justify-between items-center px-[0.5rem] 
+    <div className='h-[5.1rem] md:h-[7rem] bg-specialGray fixed top-0 left-0 w-[100%] md:flex justify-between items-center px-[0.5rem] 
     md:px-[2rem] z-[9000] text-gray-200'>
             <p className='text-lg md:text-2xl font-bold'>OnlineStore.Co</p>
             <div className='flex flex-col justify-start items-end mt-[-20px] md:mt-0'>
