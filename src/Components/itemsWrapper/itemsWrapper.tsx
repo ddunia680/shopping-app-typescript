@@ -31,7 +31,8 @@ const gridContainervariants = {
 }
 
 type compPropType = {
-  openModal: () => void,
+  openCart: () => void,
+  openWishList: () => void,
 }
 
 const theProducts = [
@@ -44,15 +45,15 @@ const theProducts = [
     { name: 'Black Rolex', pic: rolex, price: 299.99, id: WATCH_IDS.ROLEX  },
 ]
 
-export const ItemsWrapper = ({ openModal }: compPropType) => {
+export const ItemsWrapper = ({ openCart, openWishList }: compPropType) => {
 
   return (
     <motion.div variants={ gridContainervariants } 
     initial="hidden"
     animate="show"
-    className='px-[1rem] py-[1rem] flex flex-col md:flex-row justify-start items-center overflow-auto md:space-x-[1rem]'>
+    className='px-[1rem] pt-[6rem] md:pt-[8rem] py-[1rem] flex flex-col md:flex-row justify-start items-center overflow-auto md:space-x-[1rem]'>
             { theProducts.map(itm => {
-                return <ItemElement name={itm.name} pic={itm.pic} price={itm.price} key={itm.id} id={itm.id} openModal={openModal} />
+                return <ItemElement name={itm.name} pic={itm.pic} price={itm.price} key={itm.id} id={itm.id} openWishList={openWishList} openCart={openCart} />
             }) }
     </motion.div>
   )
