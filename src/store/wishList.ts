@@ -31,8 +31,12 @@ const wishList = createSlice({
             }  
         },
         DELETEITEMFROMWISHLIST: (state, action: PayloadAction<number>) => {
-            state.wishListItems.filter(el => el.id !== action.payload);
-            state.nbrOfItems -= 1;
+            const theIndex = state.wishListItems.findIndex(el => el.id === action.payload);
+            if(theIndex >= 0) {
+                state.wishListItems = state.wishListItems.filter(el => el.id !== action.payload);
+                state.nbrOfItems -= 1;
+            }
+            
         },
         CLEANWISHLIST: (state) => {
             state.wishListItems = [];

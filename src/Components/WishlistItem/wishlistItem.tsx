@@ -17,6 +17,7 @@ export default function WishlistItem({ id, image, name, price, goToCart }: wishL
     const dispatch = useAppDispatch();
 
     const AdditemToCart = () => {
+        dispatch(DELETEITEMFROMWISHLIST(id));
         dispatch(ADDITEMTOCART({ id: id, name: name, image: image, price: price }));
         goToCart();
     }
@@ -30,7 +31,7 @@ export default function WishlistItem({ id, image, name, price, goToCart }: wishL
         hidden: { opacity: 0 }, 
         show: { opacity: 1 }, 
       }}
-      className='min-h-[3rem] py-[0.7rem] md:py-[1rem] bg-gray-700 my-[0.5rem] w-[100%] flex justify-between items-center px-[0.5rem]'>
+      className='min-h-[3rem] py-[0.7rem] md:py-[1rem] bg-blue-900 my-[0.5rem] w-[100%] flex justify-between items-center px-[0.5rem]'>
           <img src={image} alt="the image" className='w-[2rem] h-[2rem] rounded-lg bg-white object-contain'/>
           <h3 className='font-bold text-white'>{name}</h3>
           <div className='w-[4rem] md:w-[4rem] h-[100%] flex flex-row justify-between items-center'>

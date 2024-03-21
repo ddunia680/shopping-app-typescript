@@ -19,17 +19,20 @@ const cartOps = createSlice({
     initialState: initialState,
     reducers: {
         ADDITEMTOCART: (state, action: PayloadAction<{ id: number, name: string, image: string, price: number }>) => {
-            const item = { 
-                id: action.payload.id, 
-                name: action.payload.name, 
-                image: action.payload.image,
-                count: 1,
-                price: action.payload.price
-            };
-            state.cartItems.push(item);
-
-            state.totalAmount = state.totalAmount + action.payload.price;
-            state.nbrOfItems = state.nbrOfItems += 1;
+            const theIndex = state.cartItems.findIndex(el => el.id === action.payload.id);
+            if(theIndex < 0) {
+                const item = { 
+                    id: action.payload.id, 
+                    name: action.payload.name, 
+                    image: action.payload.image,
+                    count: 1,
+                    price: action.payload.price
+                };
+                state.cartItems.push(item);
+    
+                state.totalAmount = state.totalAmount + action.payload.price;
+                state.nbrOfItems = state.nbrOfItems += 1;
+            }
         },
         INCREMENTITEM: (state, action: PayloadAction<number>) => {
             const index = state.cartItems.findIndex(el => el.id === action.payload);
