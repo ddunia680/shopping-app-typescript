@@ -35,7 +35,12 @@ const animateAppearance = {
 export default function Signup({ closeAuthModal, signIn }: propsTypes) {
     const [seePassw, setSeePass] = useState<boolean>(false);
     const [seeConfPass, setSeeConfPass] = useState<boolean>(false);
+    const [inOTP, setInOTP] = useState(false);
     const [windowWidth] = useState(window.innerWidth);
+    const [createdId, setCreatedId] = useState<string>('');
+    
+    const [ enteredOTP, setEnteredOTP ] = useState<string>('');
+    
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -46,16 +51,19 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
     const [emailError, setEmailError] = useState('');
     const [passwordError, setPasswordError] = useState('');
     const [confPassError, setConfPassError] = useState('');
+    const [otpErrorMessage, setOtpErrorMessage] = useState('');
 
     const [usernameIsValid, setUsernameIsValid] = useState<boolean>(false);
     const [emailIsValid, setEmailIsValid] = useState<boolean>(false);
     const [passwordIsValid, setPasswordIsValid] = useState<boolean>(false);
     const [confPassIsValid, setConfPassIsValid] = useState<boolean>(false);
+    const [OTPisValid, setOTPIsValid] = useState<boolean>(false);
 
     const [usernameIsTouched, setUsernameIsTouched] = useState<boolean>(false);
     const [emailIsTouched, setEmailIsTouched] = useState<boolean>(false);
     const [passwordIsTouched, setPasswordIsTouched] = useState<boolean>(false);
     const [confPassIsTouched, setConfPassIsTouched] = useState<boolean>(false);
+    const [OTPisTouched, setOTPIsTouched] = useState<boolean>(false);
 
     const [loading, setLoading] = useState(false);
 
@@ -84,6 +92,11 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
             setConfPassIsValid(validateInput({value, type}) as boolean);
             break;
 
+            case 'otp': 
+            setOTPIsTouched(true);
+            setOTPIsValid(validateInput({value, type}) as boolean);
+            break;
+
             default: 
             break;
         }
@@ -101,7 +114,8 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
         .then(response => {
             setLoading(false);
             console.log(response);
-            signIn();
+            setCreatedId(response.data.user._id)
+            setInOTP(true);
         }).catch(err => {
             setLoading(false);
             console.log(err.response?.data?.message);
@@ -121,6 +135,22 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
         })
     }
 
+    const issueOTPVerification = async () => {
+        setLoading(true);
+        axios.post(`auth/verify/${createdId}/${enteredOTP}`)
+        .then(response => {
+            setLoading(false);
+            console.log(response);
+            
+            signIn();
+        })
+        .catch(err => {
+            setLoading(false);
+            setOTPIsValid(false);
+            console.log(err);
+            setOtpErrorMessage(err.response.data.message);
+        })  
+    }
 
   return (
     <motion.div 
@@ -129,6 +159,8 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
      animate='visible'
      exit='exit'
     className='w-full px-[1rem] flex flex-col justify-start items-center gap-[1rem] py-[1rem] text-[300] md:text-[500]'>
+        { !inOTP ? 
+        <>
         <h3 className='text-xl font-bold tracking-wide py-[1rem]'>SignUp</h3>
         <div className='relative w-full md:w-[80%] flex justify-between items-center gap-[0.5rem] md:gap-[2rem]'>
             <p className='hidden md:block'>Username: </p>
@@ -186,11 +218,39 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
                 data-testid="loader"
             />}
         </button>
+        </>
+        :
+        <>
+        <h3 className='text-xl font-bold tracking-wide py-[1rem]'>Verify your account</h3>
+        <p>A verification code was sent to <b>{email}</b></p>
+        <div className='relative w-full md:w-[80%] flex justify-between items-center gap-[0.5rem] md:gap-[2rem]'>
+            <p className='hidden md:block'>Enter code: </p>
+            <input type='text' className={['border-b-[2px] px-[0.5rem] focus:outline-none w-full md:w-[70%] h-[2rem]', OTPisTouched && !OTPisValid ? 'border-red-700 text-red-700 bg-red-200' : 'border-emerald-700 bg-gray-300'].join(' ')} 
+            placeholder={ windowWidth < 670 ? 'Enter code' : ''} onChange={e => {
+                handleInputValidation({ event: e, type: 'otp' });
+                setEnteredOTP(e.target.value);
+            }}/>
+            <p className='text-sm absolute bottom-[-0.9rem] left-2 md:left-[10rem] text-red-700'>{otpErrorMessage}</p>
+        </div>
+        <button className='px-[1rem] py-[0.5rem] bg-pink-500/85 shadow-lg shadow-black disabled:bg-gray-400 
+        disabled:cursor-not-allowed flex justify-start items-end' 
+        disabled={!OTPisValid} onClick={() => issueOTPVerification()}>
+            <p>Verify</p>
+            { loading && <PulseLoader 
+                color={"#042143"}
+                loading={true}
+                size={3}
+                aria-label="About section"
+                data-testid="loader"
+            />}
+        </button>
+        </>}
         <p>Already have an account?  <span className='text-yellow-900 cursor-pointer hover:underline' onClick={() => signIn()}>Sign in</span></p>
         <div className='w-[70%] flex justify-between items-center'>
-            <p className='text-emerald-900 cursor-pointer hover:underline'></p>
+            <p className='text-emerald-900 cursor-pointer hover:underline'>{ inOTP && 'resend OTP in 30s' }</p>
             <p className='text-red-700 cursor-pointer hover:underline' onClick={() => closeAuthModal()}>Close?</p>
         </div>
+
     </motion.div>
   )
 }

@@ -14,7 +14,7 @@ export const validateInput = ({value, type}: propsTypes) => {
         case 'email':
           if(value.includes('@') && value.includes('.com') && !/[A-Z]/.test(value)) { return true; } else return false;
         case 'otp': 
-            if(value.length === 6 && /^\d+$/.test(value)) { return true;} else return false;
+            if(value.length === 6 && /^[0-9]+$/.test(value)) { return true;} else return false;
         default:
           break;
       }
