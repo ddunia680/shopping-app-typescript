@@ -11,6 +11,8 @@ interface enteredParam {
 export const Header = ({ openModal, openAuthModal }: enteredParam) => {
   const totalPrice = useAppSelector(state => state.cartOps.totalAmount);
   const inCartCount = useAppSelector(state => state.cartOps.nbrOfItems);
+  const token = useAppSelector(state => state.auth.token);
+  const username = useAppSelector(state => state.auth.username);
   
   return (
     <div className='h-[5.1rem] md:h-[7rem] bg-specialGray fixed top-0 left-0 w-[100%] flex justify-between items-center px-[0.5rem] 
@@ -19,9 +21,11 @@ export const Header = ({ openModal, openAuthModal }: enteredParam) => {
             object-contain' alt='the logo' /><span className='hidden md:block'>OnlineStore.Co</span></p>
             
             <div className='h-full w-[13rem] flex justify-between items-center px-2'>
-              <div className='w-[3rem] min-w-[3rem] h-[3rem] rounded-full flex justify-center items-center hover:bg-gray-700 hover:duration-200 
-              duration-200' onClick={() => openAuthModal()}>
-                <FaUserCircle title='No user logged in' size={ window.innerWidth < 500 ? 30 : 40} />
+              <div className='w-[3rem] min-w-[3rem] h-[3rem] rounded-full flex flex-col justify-center items-center ' onClick={() => { 
+                !token ? openAuthModal() : null}}>
+                <FaUserCircle title='No user logged in' size={ window.innerWidth < 500 ? 30 : 40} className='rounded-full p-[3px] 
+                hover:bg-gray-700 hover:duration-200 duration-200' />
+                { username && <p className='text-sm text-white'>{username}</p>}
               </div>
               <div className='flex flex-col justify-start items-end w-[16rem]'>
                   <p className='text-sm md:text-lg'>Total Items: <span className='text-yellow-500'>{inCartCount}</span></p>

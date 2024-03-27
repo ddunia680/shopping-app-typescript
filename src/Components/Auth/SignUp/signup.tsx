@@ -128,7 +128,9 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
         }
     }
 
-    const issueSignup = async () => {
+    const issueSignup = () => {
+        usernameError && setUsernameError(''); emailError && setEmailError(''); passwordError && setPasswordError('');
+        confPassError && setConfPassError('');
         setLoading(true);
         const data = new FormData();
         data.append('username', username);
@@ -165,6 +167,7 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
     }
 
     const issueOTPVerification = async () => {
+        otpErrorMessage && setOtpErrorMessage('');
         setLoading(true);
         axios.post(`auth/verify/${createdUser?.email}/${enteredOTP}`)
         .then(response => {
@@ -182,6 +185,7 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
     }
 
     const requestOTPResend = async () => {
+        otpErrorMessage && setOtpErrorMessage('');
         setResendOTPLoading(true);
         setOtpDelayValue(60);
         setCounting(true);
@@ -262,8 +266,6 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
                 color={"#042143"}
                 loading={true}
                 size={3}
-                aria-label="About section"
-                data-testid="loader"
             />}
         </button>
         </>
@@ -281,7 +283,7 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
             }}/>
             <p className='text-sm absolute bottom-[-0.9rem] left-2 md:left-[10rem] text-red-700'>{otpErrorMessage}</p>
         </div>
-        <button className='px-[1rem] py-[0.5rem] bg-pink-500/85 shadow-lg shadow-black disabled:bg-gray-400 
+        <button className='px-[1rem] py-[0.5rem] bg-pink-500/85 shadow-lg shadow-black disabled:bg-gray-300 
         disabled:cursor-not-allowed disabled:text-gray-400  flex justify-start items-end' 
         disabled={!OTPisValid} onClick={() => issueOTPVerification()}>
             <p>Verify</p>
