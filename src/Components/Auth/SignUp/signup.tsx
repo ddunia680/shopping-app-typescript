@@ -1,4 +1,4 @@
-import { ChangeEvent, useState } from 'react'
+import { ChangeEvent, useEffect, useState } from 'react'
 import { FaEye } from 'react-icons/fa'
 import { RiEyeCloseFill } from 'react-icons/ri'
 import { motion } from 'framer-motion'
@@ -15,6 +15,12 @@ type propsTypes = {
 type inputValidationTypes = {
     event: ChangeEvent<HTMLInputElement>,
     type: string,
+}
+
+type createdUserType = {
+    _id: string,
+    username: string,
+    email: string,
 }
 
 const animateAppearance = {
@@ -37,10 +43,13 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
     const [seeConfPass, setSeeConfPass] = useState<boolean>(false);
     const [inOTP, setInOTP] = useState(false);
     const [windowWidth] = useState(window.innerWidth);
-    const [createdId, setCreatedId] = useState<string>('');
+    const [createdUser, setCreatedUser] = useState<createdUserType | undefined>();
     
     const [ enteredOTP, setEnteredOTP ] = useState<string>('');
-    
+    const [counting, setCounting] = useState(false);
+    const [otpDelayValue, setOtpDelayValue] = useState(30);
+    const [resendOTPLoading, setResendOTPLoading] = useState(false); 
+    const [resentOTp, setResentOTP] = useState(false);   
 
     const [username, setUsername] = useState('');
     const [email, setEmail] = useState('');
@@ -52,6 +61,7 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
     const [passwordError, setPasswordError] = useState('');
     const [confPassError, setConfPassError] = useState('');
     const [otpErrorMessage, setOtpErrorMessage] = useState('');
+    const [mainError, setMainError] = useState('');
 
     const [usernameIsValid, setUsernameIsValid] = useState<boolean>(false);
     const [emailIsValid, setEmailIsValid] = useState<boolean>(false);
@@ -68,6 +78,22 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
     const [loading, setLoading] = useState(false);
 
     const formIsValid = usernameIsValid && emailIsValid && passwordIsValid && confPassIsValid;
+
+    useEffect(() => {
+        if(inOTP) {
+            setCounting(true);
+            setInterval(() => {
+                setOtpDelayValue(curr => curr - 1);
+            }, 1000);
+        }
+    }, [inOTP]);
+
+    useEffect(() => {
+        if(otpDelayValue === 0) {
+            setCounting(false);
+        }
+    }, [otpDelayValue]);
+    
 
     const handleInputValidation = ({ event, type }: inputValidationTypes) => {
         const value = event.target.value
@@ -114,7 +140,8 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
         .then(response => {
             setLoading(false);
             console.log(response);
-            setCreatedId(response.data.user._id)
+            setCreatedUser(response.data.user);
+            
             setInOTP(true);
         }).catch(err => {
             setLoading(false);
@@ -131,13 +158,15 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
             } else if(err.response?.data?.message.includes('confirm')) {
                 setConfPassIsValid(false);
                 setConfPassError(err.response.data.message);
+            } else {
+                setMainError(err.response.data.message);
             }
         })
     }
 
     const issueOTPVerification = async () => {
         setLoading(true);
-        axios.post(`auth/verify/${createdId}/${enteredOTP}`)
+        axios.post(`auth/verify/${createdUser?.email}/${enteredOTP}`)
         .then(response => {
             setLoading(false);
             console.log(response);
@@ -152,6 +181,24 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
         })  
     }
 
+    const requestOTPResend = async () => {
+        setResendOTPLoading(true);
+        setOtpDelayValue(60);
+        setCounting(true);
+
+        axios.post(`auth/requestOTp/${createdUser?.email}`)
+        .then(res => {
+            setResentOTP(true);
+            setResendOTPLoading(false);
+            console.log(res);
+            
+        })
+        .catch(err => {
+            setResendOTPLoading(false);
+            setMainError(err.response.data.message);
+        })
+    }
+
   return (
     <motion.div 
     variants={animateAppearance}
@@ -162,6 +209,7 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
         { !inOTP ? 
         <>
         <h3 className='text-xl font-bold tracking-wide py-[1rem]'>SignUp</h3>
+        { mainError && <p className='text-red-700 text-center text-sm'>{mainError}</p>}
         <div className='relative w-full md:w-[80%] flex justify-between items-center gap-[0.5rem] md:gap-[2rem]'>
             <p className='hidden md:block'>Username: </p>
             <input type='text' className={['border-b-[2px] px-[0.5rem] focus:outline-none w-full md:w-[70%] h-[2rem]', usernameIsTouched && !usernameIsValid ? 'border-red-700 text-red-700 bg-red-200' : 'border-emerald-700 bg-gray-300' ].join(' ')} 
@@ -206,8 +254,8 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
             </div>
             <p className='text-sm absolute bottom-[-0.9rem] left-2 md:left-[10rem] text-red-700'>{confPassError}</p>
         </div>
-        <button className='px-[1rem] py-[0.5rem] bg-purple-500/85 shadow-lg shadow-black disabled:bg-gray-400 
-        disabled:cursor-not-allowed flex justify-start items-end' 
+        <button className='px-[1rem] py-[0.5rem] bg-purple-500/85 shadow-lg shadow-black disabled:bg-gray-300 
+        disabled:cursor-not-allowed disabled:text-gray-400 flex justify-start items-end' 
         disabled={!formIsValid} onClick={() => issueSignup()}>
             <p>Register</p>
             { loading && <PulseLoader 
@@ -222,7 +270,8 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
         :
         <>
         <h3 className='text-xl font-bold tracking-wide py-[1rem]'>Verify your account</h3>
-        <p>A verification code was sent to <b>{email}</b></p>
+        { resentOTp ? <p>A new code was sent to <b>{email}</b></p> : <p>A verification code was sent to <b>{email}</b></p>}
+        { mainError && <p className='text-red-700 text-center text-sm'>{mainError}</p>}
         <div className='relative w-full md:w-[80%] flex justify-between items-center gap-[0.5rem] md:gap-[2rem]'>
             <p className='hidden md:block'>Enter code: </p>
             <input type='text' className={['border-b-[2px] px-[0.5rem] focus:outline-none w-full md:w-[70%] h-[2rem]', OTPisTouched && !OTPisValid ? 'border-red-700 text-red-700 bg-red-200' : 'border-emerald-700 bg-gray-300'].join(' ')} 
@@ -233,21 +282,27 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
             <p className='text-sm absolute bottom-[-0.9rem] left-2 md:left-[10rem] text-red-700'>{otpErrorMessage}</p>
         </div>
         <button className='px-[1rem] py-[0.5rem] bg-pink-500/85 shadow-lg shadow-black disabled:bg-gray-400 
-        disabled:cursor-not-allowed flex justify-start items-end' 
+        disabled:cursor-not-allowed disabled:text-gray-400  flex justify-start items-end' 
         disabled={!OTPisValid} onClick={() => issueOTPVerification()}>
             <p>Verify</p>
             { loading && <PulseLoader 
                 color={"#042143"}
                 loading={true}
                 size={3}
-                aria-label="About section"
-                data-testid="loader"
             />}
         </button>
         </>}
         <p>Already have an account?  <span className='text-yellow-900 cursor-pointer hover:underline' onClick={() => signIn()}>Sign in</span></p>
         <div className='w-[70%] flex justify-between items-center'>
-            <p className='text-emerald-900 cursor-pointer hover:underline'>{ inOTP && 'resend OTP in 30s' }</p>
+            <p className={['cursor-pointer hover:underline flex justify-start items-end', inOTP && counting ? 'text-gray-400 cursor-not-allowed' : 'text-emerald-900 cursor-pointer'].join(' ')}
+            onClick={() => inOTP && !counting && requestOTPResend()}>
+                <span>{ inOTP && counting ? `resend OTP in ${otpDelayValue}s` : inOTP && !counting ? 'resend OTP' : '' }</span>
+                { resendOTPLoading && <PulseLoader 
+                color={"#042143"}
+                loading={true}
+                size={3}
+            />}
+            </p>
             <p className='text-red-700 cursor-pointer hover:underline' onClick={() => closeAuthModal()}>Close?</p>
         </div>
 
