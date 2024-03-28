@@ -54,6 +54,8 @@ const Modal = ({ cart, closeCart, closeWishlist }: enteredParam) => {
   const dispatch = useAppDispatch();
 
   const [ inWishlist, setInWishlist ] = useState<boolean>(false);
+  // console.log(wishListItems);
+  
 
   useEffect(() => {
     if(!cart) {
@@ -88,8 +90,15 @@ const Modal = ({ cart, closeCart, closeWishlist }: enteredParam) => {
           <div className='flex flex-row justify-between items-center px-[0.5rem] py-[1rem] w-[100%]'>
               <ArrowLeftIcon title='back?' className='w-[1rem] text-blue-900 font-extrabold' onClick={() => {closeModal()}}/>
               <h2 className='font-extrabold text-lg text-purple-950'>{inWishlist ? 'Wishlist' : 'My Cart'}</h2>
-              { cartItems.length ? 
-                <TrashIcon title={inWishlist ? 'Empty the wishList?': 'Empty the cart?'} className='w-[1.5rem] text-slate-900 font-extrabold hover:border-[1px] 
+              { inWishlist ?
+              wishListItems.length ? 
+                <TrashIcon title={inWishlist ? 'Empty the wishList?': 'Empty the cart?'} className='w-[1.5rem] text-red-900 font-extrabold hover:border-[1px] 
+              hover:border-slate-400 rounded-md duration-150 hover:duration-150' onClick={() => emptyUIHandler()}/>
+              : 
+               <p className='text-blue-200'>.</p>
+              :
+               cartItems.length ? 
+                <TrashIcon title={inWishlist ? 'Empty the wishList?': 'Empty the cart?'} className='w-[1.5rem] text-red-900 font-extrabold hover:border-[1px] 
                hover:border-slate-400 rounded-md duration-150 hover:duration-150' onClick={() => emptyUIHandler()}/>
               : 
                 <p className='text-blue-200'>.</p>}
