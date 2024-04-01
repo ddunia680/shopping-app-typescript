@@ -5,10 +5,11 @@ import { motion } from 'framer-motion'
 import { validateInput } from '../../../utility/validateInput'
 import PulseLoader from 'react-spinners/PulseLoader'
 import axios from '../../../../axios'
+import { useAppDispatch } from '../../../store/hooks'
+import { CLOSE_AUTH_MODAL } from '../../../store/auth'
 
 
 type propsTypes = {
-    closeAuthModal: () => void,
     signIn: () => void,
 }
 
@@ -38,7 +39,8 @@ const animateAppearance = {
     },
   }
 
-export default function Signup({ closeAuthModal, signIn }: propsTypes) {
+export default function Signup({ signIn }: propsTypes) {
+    const dispatch = useAppDispatch();
     const [seePassw, setSeePass] = useState<boolean>(false);
     const [seeConfPass, setSeeConfPass] = useState<boolean>(false);
     const [inOTP, setInOTP] = useState(false);
@@ -305,7 +307,7 @@ export default function Signup({ closeAuthModal, signIn }: propsTypes) {
                 size={3}
             />}
             </p>
-            <p className='text-red-700 cursor-pointer hover:underline' onClick={() => closeAuthModal()}>Close?</p>
+            <p className='text-red-700 cursor-pointer hover:underline' onClick={() => dispatch(CLOSE_AUTH_MODAL())}>Close?</p>
         </div>
 
     </motion.div>

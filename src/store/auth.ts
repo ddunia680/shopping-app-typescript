@@ -6,6 +6,15 @@ interface authTypes {
     _id: string,
     username: string,
     email: string,
+    showAuth: boolean,
+    authThroughCart: boolean,
+}
+
+type loginTypes = {
+    token: string,
+    _id: string,
+    username: string,
+    email: string,
 }
 
 const initialState: authTypes = {
@@ -13,13 +22,24 @@ const initialState: authTypes = {
     _id: '',
     username: '',
     email: '',
+    showAuth: false,
+    authThroughCart: false,
 }
 
 const authSlice = createSlice({
     name: 'authSlice',
     initialState: initialState,
     reducers: {
-        LOGIN: (state, action: PayloadAction<authTypes>) => {
+        OPEN_AUTH_MODAL: (state) => {
+            state.showAuth = true;
+        },
+        CLOSE_AUTH_MODAL: (state) => {
+            state.showAuth = false;
+        },
+        OPEN_AUTH_THROUGH_CART: (state) => {
+            state.authThroughCart = true;
+        },
+        LOGIN: (state, action: PayloadAction<loginTypes>) => {
             localStorage.setItem('token', action.payload.token);
             localStorage.setItem('id', action.payload._id);
             localStorage.setItem('username', action.payload.username);
@@ -59,7 +79,7 @@ const authSlice = createSlice({
     }
 });
 
-export const { LOGIN, RELOGIN_ON_RELOAD, ISSUE_LOGOUT } = authSlice.actions;
+export const { LOGIN, RELOGIN_ON_RELOAD, ISSUE_LOGOUT, OPEN_AUTH_MODAL, CLOSE_AUTH_MODAL, OPEN_AUTH_THROUGH_CART } = authSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.auth;

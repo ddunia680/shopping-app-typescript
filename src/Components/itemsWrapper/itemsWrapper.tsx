@@ -30,11 +30,6 @@ const gridContainervariants = {
   },
 }
 
-type compPropType = {
-  openCart: () => void,
-  openWishList: () => void,
-}
-
 const theProducts = [
     { name: 'Apple Smart Watch', pic: appleWatch, price: 99.99, id: WATCH_IDS.APPLEWATCH }, 
     { name: 'Smart MontBlanc', pic: montBlanc, price: 39.99, id: WATCH_IDS.MONTBLANC  }, 
@@ -45,7 +40,7 @@ const theProducts = [
     { name: 'Black Rolex', pic: rolex, price: 299.99, id: WATCH_IDS.ROLEX  },
 ]
 
-export const ItemsWrapper = ({ openCart, openWishList }: compPropType) => {
+export const ItemsWrapper = () => {
 
   return (
     <motion.div variants={ gridContainervariants } 
@@ -53,7 +48,7 @@ export const ItemsWrapper = ({ openCart, openWishList }: compPropType) => {
     animate="show"
     className='px-[1rem] pt-[6rem] md:pt-[8rem] py-[1rem] flex flex-col md:flex-row justify-start items-center overflow-auto md:space-x-[1rem]'>
             { theProducts.map(itm => {
-                return <ItemElement name={itm.name} pic={itm.pic} price={itm.price} key={itm.id} id={itm.id} openWishList={openWishList} openCart={openCart} />
+                return <ItemElement name={itm.name} pic={itm.pic} price={itm.price} key={itm.id} id={itm.id} />
             }) }
     </motion.div>
   )

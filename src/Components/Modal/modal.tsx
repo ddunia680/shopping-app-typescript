@@ -4,16 +4,10 @@ import { CartItem } from '../cartItem/cartItem';
 import Backdrop from '../Backdrop/backdrop';
 import { motion } from 'framer-motion';
 import { useAppDispatch, useAppSelector } from '../../store/hooks';
-import { CLEARCART } from '../../store/cart';
+import { CLEARCART, HIDE_CART } from '../../store/cart';
 import { useEffect, useState } from 'react';
 import WishlistItem from '../WishlistItem/wishlistItem';
-import { CLEANWISHLIST } from '../../store/wishList';
-
-interface enteredParam {
-  closeCart: () => void,
-  closeWishlist: () => void,
-  cart: boolean,
-}
+import { CLEANWISHLIST, HIDE_WISHLIST } from '../../store/wishList';
 
 const slideInOut = {
     hidden: {
@@ -47,10 +41,11 @@ const gridContainervariants = {
   },
 }
 
-const Modal = ({ cart, closeCart, closeWishlist }: enteredParam) => {
+const Modal = () => {
   const cartItems = useAppSelector(state => state.cartOps.cartItems);
   const wishListItems = useAppSelector(state => state.wishList.wishListItems);
   const totalPrice = useAppSelector(state => state.cartOps.totalAmount);
+  const showCart = useAppSelector(state => state.cartOps.showCart);
   const dispatch = useAppDispatch();
 
   const [ inWishlist, setInWishlist ] = useState<boolean>(false);
@@ -58,21 +53,21 @@ const Modal = ({ cart, closeCart, closeWishlist }: enteredParam) => {
   
 
   useEffect(() => {
-    if(!cart) {
+    if(!showCart) {
       setInWishlist(true);
     }
-  }, [cart])
+  }, [showCart])
 
   const emptyUIHandler = () => {
     inWishlist ? dispatch(CLEANWISHLIST()) : dispatch(CLEARCART());
-    cart ? closeCart() : closeWishlist();
+    showCart ? dispatch(HIDE_CART()) : dispatch(HIDE_WISHLIST());
   }
 
   const closeModal = () => {
-    if(cart) {
-      closeCart()
+    if(showCart) {
+      dispatch(HIDE_CART())
     } else {
-      closeWishlist()
+      dispatch(HIDE_WISHLIST())
     }
   }
 

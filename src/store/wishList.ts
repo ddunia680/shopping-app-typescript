@@ -5,17 +5,25 @@ import type { RootState } from "./store";
 interface wishListStates {
     wishListItems: {id: number, image: string, name: string, count: number, price: number}[],
     nbrOfItems: number,
+    showWishList: boolean,
 }
 
 const initialState: wishListStates = {
     wishListItems: [],
-    nbrOfItems: 0
+    nbrOfItems: 0,
+    showWishList: false,
 }
 
 const wishList = createSlice({
     name: 'wishList Box',
     initialState: initialState,
     reducers: {
+        SHOW_WISHLIST: (state) => {
+            state.showWishList = true;
+        },
+        HIDE_WISHLIST: (state) => {
+            state.showWishList = false;
+        },
         ADDTOWISHLIST: (state, action: PayloadAction<{id: number, name: string, image: string, price: number}>) => {
             const theindex = state.wishListItems.findIndex(el => el.id === action.payload.id);
             if(theindex < 0) {
@@ -45,7 +53,7 @@ const wishList = createSlice({
     }
 });
 
-export const { ADDTOWISHLIST, DELETEITEMFROMWISHLIST, CLEANWISHLIST } = wishList.actions;
+export const { ADDTOWISHLIST, DELETEITEMFROMWISHLIST, CLEANWISHLIST, SHOW_WISHLIST, HIDE_WISHLIST } = wishList.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.wishList;
