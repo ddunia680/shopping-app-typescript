@@ -3,7 +3,13 @@ import { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { ISSUE_LOGOUT, RELOGIN_ON_RELOAD } from "./store/auth";
-import Home from "./pages/home";
+// import Home from "./pages/home";
+import { Header } from "./Components/header/header";
+import { Outlet } from "react-router";
+import { Footer } from "./Components/footer/footer";
+import { AnimatePresence } from "framer-motion";
+import Modal from "./Components/Modal/modal";
+import { AuthModal } from "./Components/Auth/authModal";
 
 
 function App() {
@@ -11,7 +17,10 @@ function App() {
   const token = useAppSelector(state => state.auth.token);
   const keptToken = localStorage.getItem('token');
   const expiryDate = localStorage.getItem('expiryDate')!;
-  // console.log(showCart);
+  
+  const showAuth = useAppSelector(state => state.auth.showAuth);
+  const showCart = useAppSelector(state => state.cartOps.showCart);
+  const showWishList = useAppSelector(state => state.wishList.showWishList);
 
   useEffect(() => {
     if(new Date(expiryDate).getTime() <= new Date().getTime()) {
@@ -31,14 +40,22 @@ function App() {
       dispatch(ISSUE_LOGOUT());
       console.log('we logged out');
     }, milliseconds);
-  }
-
-  document.title = 'The Store AMST';
-  
+  }  
 
   return (
-    <div className="relative w-[100vw] h-[100vh]">
-      <Home />      
+    <div className="w-[100vw] h-[100%]">
+      <Header />
+      <Outlet/>
+      <AnimatePresence
+        initial={false}
+        mode='wait'
+      >
+        { (showCart || showWishList) && <Modal /> }
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode="wait">
+        { showAuth && <AuthModal/> }
+      </AnimatePresence> 
+      <Footer/> 
     </div>
   )
 }

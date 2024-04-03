@@ -46,7 +46,8 @@ export const ItemsWrapper = () => {
     <motion.div variants={ gridContainervariants } 
     initial="hidden"
     animate="show"
-    className='px-[1rem] pt-[6rem] md:pt-[8rem] py-[1rem] flex flex-col md:flex-row justify-start items-center overflow-auto md:space-x-[1rem]'>
+    className='px-[1rem] pt-[6rem] md:pt-[8rem] py-[1rem] flex flex-col md:flex-row justify-start items-center overflow-auto 
+    md:space-x-[1rem] space-y-[1rem] md:space-y-0'>
             { theProducts.map(itm => {
                 return <ItemElement name={itm.name} pic={itm.pic} price={itm.price} key={itm.id} id={itm.id} />
             }) }

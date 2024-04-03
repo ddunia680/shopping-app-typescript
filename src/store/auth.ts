@@ -69,6 +69,7 @@ const authSlice = createSlice({
             localStorage.removeItem('id');
             localStorage.removeItem('username');
             localStorage.removeItem('email');
+            localStorage.removeItem('expiryDate');
 
             state._id = '';
             state.token = '';
