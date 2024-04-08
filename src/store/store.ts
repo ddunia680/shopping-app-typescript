@@ -2,12 +2,16 @@ import { configureStore } from "@reduxjs/toolkit";
 import cart from "./cart";
 import wishList from "./wishList";
 import authSlice from "./auth";
+import watcheSlice from "./watches";
+import errorUI from "./errorUI";
 
 const store = configureStore({
     reducer: {
         cartOps: cart,
         wishList: wishList, 
         auth: authSlice,
+        watches: watcheSlice,
+        errorUI: errorUI,
     }
 });
 

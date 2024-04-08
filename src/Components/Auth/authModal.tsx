@@ -1,12 +1,11 @@
-import React, { useState } from 'react'
+import { useState } from 'react'
 import Backdrop from '../Backdrop/backdrop'
 import { motion } from 'framer-motion'
 import Login from './Login/login'
 import Signup from './SignUp/signup'
-
-type propsTypes = {
-  closeAuthModal: () => void,
-}
+import ForgotPass from './ForgotPassword/forgotPass'
+import { useAppDispatch } from '../../store/hooks'
+import { CLOSE_AUTH_MODAL } from '../../store/auth'
 
 const slideInOut = {
   hidden: {
@@ -29,8 +28,10 @@ const slideInOut = {
   },
 }
 
-export const AuthModal = ({closeAuthModal}: propsTypes) => {
+export const AuthModal = () => {
+  const dispatch = useAppDispatch();
   const [ loginIn, setLoginIn ] = useState<boolean>(true);
+  const [ forgotPass, setForgotPass ] = useState<boolean>(false);
 
   const signUp = () => {
     setLoginIn(false);
@@ -40,15 +41,24 @@ export const AuthModal = ({closeAuthModal}: propsTypes) => {
     setLoginIn(true);
   }
 
+  const forgotP = () => {
+    setForgotPass(true);
+    setLoginIn(false);
+  }
+
   return (
-    <Backdrop onClick={() => closeAuthModal()}>
+    <Backdrop onClick={() => dispatch(CLOSE_AUTH_MODAL())}>
         <motion.div 
         variants={slideInOut}
         initial='hidden'
         animate='visible'
         exit='exit'
         className='bg-white z-100 w-[90%] md:w-[40rem] flex justify-center items-center' onClick={(e) => e.stopPropagation()}>
-          { loginIn ? <Login signUp={signUp} closeAuthModal={closeAuthModal}/> : <Signup signIn={signIn} closeAuthModal={closeAuthModal} /> }
+          { loginIn ? 
+            <Login signUp={signUp} forgotPass={forgotP}/> : 
+          forgotPass ? 
+            <ForgotPass signIn={signIn}  /> : 
+            <Signup signIn={signIn} /> }
         </motion.div>
     </Backdrop>
   )

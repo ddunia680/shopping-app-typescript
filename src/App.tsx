@@ -1,27 +1,34 @@
 
-import { ItemsWrapper } from "./Components/itemsWrapper/itemsWrapper";
-import { Footer } from "./Components/footer/footer";
-import { useEffect, useState } from "react";
-import Modal from "./Components/Modal/modal";
-import { Header } from "./Components/header/header";
+import { useEffect } from "react";
 
-import { AnimatePresence } from "framer-motion";
-import { AuthModal } from "./Components/Auth/authModal";
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { ISSUE_LOGOUT, RELOGIN_ON_RELOAD } from "./store/auth";
+import { Header } from "./Components/header/header";
+import { Outlet } from "react-router";
+import { Footer } from "./Components/footer/footer";
+import { AnimatePresence } from "framer-motion";
+import Modal from "./Components/Modal/modal";
+import { AuthModal } from "./Components/Auth/authModal";
+import axios from '../axios';
+import { PULLWATCHES, STARTPULLING } from "./store/watches";
+import { watchType } from "./store/watches";
+import Notification from "./ui/notification";
+import { END_NOTIFICATION } from "./store/errorUI";
 
 
 function App() {
   const dispatch = useAppDispatch();
-  const [showCart, setShowCart] = useState<boolean>(false);
-  const [ showAuth, setShowAuth ] = useState<boolean>(false);
-  const [showWishList, setShowWishList] = useState<boolean>(false);
   const token = useAppSelector(state => state.auth.token);
   const keptToken = localStorage.getItem('token');
   const expiryDate = localStorage.getItem('expiryDate')!;
-  // console.log(showCart);
+  
+  const showAuth = useAppSelector(state => state.auth.showAuth);
+  const showCart = useAppSelector(state => state.cartOps.showCart);
+  const showWishList = useAppSelector(state => state.wishList.showWishList);
+  const notify = useAppSelector(state => state.errorUI.notify);
 
   useEffect(() => {
+    dispatch(STARTPULLING());
     if(new Date(expiryDate).getTime() <= new Date().getTime()) {
       dispatch(ISSUE_LOGOUT());
     }
@@ -31,43 +38,51 @@ function App() {
       dispatch(RELOGIN_ON_RELOAD());
       OperateLogout(newTimeout);
     }
+
+    axios.get('/pullWatches')
+    .then(res => {
+      dispatch(PULLWATCHES(res.data.watches as watchType[]))
+    })
+    .catch(err => {
+      console.log(err);
+      
+    })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if(notify) {
+      setTimeout(() => {
+        dispatch(END_NOTIFICATION());
+      }, 5000);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notify])
 
   const OperateLogout = (milliseconds: number) => {
     setTimeout(() => {
       dispatch(ISSUE_LOGOUT());
       console.log('we logged out');
     }, milliseconds);
-  }
-
-  const openCart = () => setShowCart(true);
-  const closeCart = () => setShowCart(false);
-
-  const openWishList = () => setShowWishList(true);
-  const closeWishList = () => setShowWishList(false);
-
-  const openAuthModal = () => setShowAuth(true);
-  const closeAuthModal = () => setShowAuth(false);
-
-  document.title = 'The Store AMST';
-  
+  }  
 
   return (
-    <div className="relative w-[100vw] h-[100vh]">
-      <Header openModal={openCart} openAuthModal={openAuthModal} />
-      <ItemsWrapper openWishList={openWishList} openCart={openCart} />
-      <Footer/>
+    <div className="w-[100vw] h-[100%]">
+      <Header />
+      <Outlet/>
       <AnimatePresence
         initial={false}
         mode='wait'
       >
-        { (showCart || showWishList) && <Modal cart={showCart} closeCart={closeCart} closeWishlist={closeWishList} /> }
+        { (showCart || showWishList) && <Modal /> }
       </AnimatePresence>
       <AnimatePresence initial={false} mode="wait">
-        { showAuth && <AuthModal closeAuthModal={closeAuthModal} /> }
+        { showAuth && <AuthModal/> }
+      </AnimatePresence> 
+      <AnimatePresence initial={false} mode="wait">
+        { notify && <Notification />}
       </AnimatePresence>
-      
+      <Footer/> 
     </div>
   )
 }

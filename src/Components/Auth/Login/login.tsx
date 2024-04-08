@@ -1,15 +1,18 @@
-import { ChangeEvent, useEffect, useState } from 'react'
-import { FaEye } from 'react-icons/fa'
-import { RiEyeCloseFill } from 'react-icons/ri'
-import PulseLoader from 'react-spinners/PulseLoader'
+import { ChangeEvent, useEffect, useState } from 'react';
+import { FaEye } from 'react-icons/fa';
+import { RiEyeCloseFill } from 'react-icons/ri';
+import PulseLoader from 'react-spinners/PulseLoader';
 import {  motion } from 'framer-motion';
 import { validateInput } from '../../../utility/validateInput';
 import axios from '../../../../axios';
+import { useAppDispatch, useAppSelector } from '../../../store/hooks';
+import { CLOSE_AUTH_MODAL, LOGIN } from '../../../store/auth';
+import { SHOW_CART } from '../../../store/cart';
 
 
 type propsTypes = {
-    closeAuthModal: () => void,
     signUp: () => void,
+    forgotPass: () => void,
 }
 
 type inputValidationTypes = {
@@ -32,7 +35,9 @@ const animateAppearance = {
     },
   }
 
-export default function Login({ closeAuthModal, signUp }: propsTypes) {
+export default function Login({ signUp, forgotPass }: propsTypes) {
+  const dispatch = useAppDispatch();
+    const authThroughCart = useAppSelector(state => state.auth.authThroughCart);
     const [seePassw, setSeePass] = useState<boolean>(false);
     const [windowWidth] = useState(window.innerWidth);
     const [loading, setLoading] = useState<boolean>(false);
@@ -74,14 +79,14 @@ export default function Login({ closeAuthModal, signUp }: propsTypes) {
           setInterval(() => {
               setOtpDelayValue(curr => curr - 1);
           }, 1000);
-      }
-  }, [emailAlreadyIn]);
+        }
+    }, [emailAlreadyIn]);
 
-  useEffect(() => {
-      if(otpDelayValue === 0) {
-          setCounting(false);
-      }
-  }, [otpDelayValue]);
+    useEffect(() => {
+        if(otpDelayValue === 0) {
+            setCounting(false);
+        }
+    }, [otpDelayValue]);
 
     const handleInputValidation = ({ event, type }: inputValidationTypes) => {
         const value = event.target.value
@@ -121,7 +126,12 @@ export default function Login({ closeAuthModal, signUp }: propsTypes) {
       axios.post('auth/login', thedata)
       .then(res => {
         setLoading(false);
+        const theAuthData = res.data!;
         console.log(res);
+        dispatch(LOGIN({
+          token: theAuthData.token, _id: theAuthData._id, username: theAuthData.username, email: theAuthData.email}))
+        dispatch(CLOSE_AUTH_MODAL())
+        authThroughCart && dispatch(SHOW_CART());
       })
       .catch(err => {
         setLoading(false);
@@ -170,7 +180,8 @@ export default function Login({ closeAuthModal, signUp }: propsTypes) {
       axios.post(`auth/verify/${email}/${enteredOTP}`)
       .then(res => {
         setLoading(false);
-        console.log(res);  
+        console.log(res);
+          setVerifyingAcc(false);
       })
       .catch(err => {
         setLoading(false);
@@ -284,11 +295,11 @@ export default function Login({ closeAuthModal, signUp }: propsTypes) {
       </>}
       <div className='w-[70%] flex justify-between items-center'>
           <p className={['hover:underline', emailAlreadyIn && counting ? 'text-gray-400 cursor-not-allowed' : 
-          'text-emerald-900 cursor-pointer'].join(' ')} onClick={() => {requestOTp(); delayNextOTPResendRequest();}}>
+          'text-emerald-900 cursor-pointer'].join(' ')} onClick={() => { !verifyingAcc ? forgotPass() : requestOTp(); delayNextOTPResendRequest();}}>
             { !verifyingAcc ? 'Forgot password?' : verificationStarted && emailAlreadyIn && counting ? `resend OTP in ${otpDelayValue}` : 
             verificationStarted && emailAlreadyIn && !counting ? 'resent OTP code' : ''}
           </p>
-          <p className='text-red-700 cursor-pointer hover:underline' onClick={() => closeAuthModal()}>Close?</p>
+          <p className='text-red-700 cursor-pointer hover:underline' onClick={() => dispatch(CLOSE_AUTH_MODAL())}>Close?</p>
       </div>
     </motion.div>
   )
