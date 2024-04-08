@@ -109,7 +109,7 @@ const Modal = () => {
               <p className='mx-auto'>No Items in the WishList</p>
             :
               wishListItems.map(wishItem => (
-                <WishlistItem key={wishItem.id} id={wishItem.id} name={wishItem.name} image={wishItem.image} price={wishItem.price} goToCart={goToCart} />
+                <WishlistItem key={wishItem.id} id={wishItem.id} name={wishItem.name} image={wishItem.image} price={wishItem.price} previousPrice={wishItem.previousPrice} goToCart={goToCart} />
               ))
             :
             !cartItems.length ?
