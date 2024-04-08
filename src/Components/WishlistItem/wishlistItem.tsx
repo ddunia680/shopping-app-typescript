@@ -6,19 +6,20 @@ import { ADDITEMTOCART } from '../../store/cart';
 import { DELETEITEMFROMWISHLIST } from '../../store/wishList';
 
 interface wishListItemType {
-    id: number,
+    id: string,
     image: string,
     name: string,
     price: number,
+    previousPrice: number,
     goToCart: () => void,
 }
 
-export default function WishlistItem({ id, image, name, price, goToCart }: wishListItemType) {
+export default function WishlistItem({ id, image, name, price, previousPrice, goToCart }: wishListItemType) {
     const dispatch = useAppDispatch();
 
     const AdditemToCart = () => {
         dispatch(DELETEITEMFROMWISHLIST(id));
-        dispatch(ADDITEMTOCART({ id: id, name: name, image: image, price: price }));
+        dispatch(ADDITEMTOCART({ id: id, name: name, image: image, price: price, previousPrice: previousPrice }));
         goToCart();
     }
 
