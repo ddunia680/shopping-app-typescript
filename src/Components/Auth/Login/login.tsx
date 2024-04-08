@@ -1,7 +1,7 @@
-import { ChangeEvent, useEffect, useState } from 'react'
-import { FaEye } from 'react-icons/fa'
-import { RiEyeCloseFill } from 'react-icons/ri'
-import PulseLoader from 'react-spinners/PulseLoader'
+import { ChangeEvent, useEffect, useState } from 'react';
+import { FaEye } from 'react-icons/fa';
+import { RiEyeCloseFill } from 'react-icons/ri';
+import PulseLoader from 'react-spinners/PulseLoader';
 import {  motion } from 'framer-motion';
 import { validateInput } from '../../../utility/validateInput';
 import axios from '../../../../axios';

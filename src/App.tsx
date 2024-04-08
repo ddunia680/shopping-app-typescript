@@ -3,13 +3,17 @@ import { useEffect } from "react";
 
 import { useAppDispatch, useAppSelector } from "./store/hooks";
 import { ISSUE_LOGOUT, RELOGIN_ON_RELOAD } from "./store/auth";
-// import Home from "./pages/home";
 import { Header } from "./Components/header/header";
 import { Outlet } from "react-router";
 import { Footer } from "./Components/footer/footer";
 import { AnimatePresence } from "framer-motion";
 import Modal from "./Components/Modal/modal";
 import { AuthModal } from "./Components/Auth/authModal";
+import axios from '../axios';
+import { PULLWATCHES, STARTPULLING } from "./store/watches";
+import { watchType } from "./store/watches";
+import Notification from "./ui/notification";
+import { END_NOTIFICATION } from "./store/errorUI";
 
 
 function App() {
@@ -21,8 +25,10 @@ function App() {
   const showAuth = useAppSelector(state => state.auth.showAuth);
   const showCart = useAppSelector(state => state.cartOps.showCart);
   const showWishList = useAppSelector(state => state.wishList.showWishList);
+  const notify = useAppSelector(state => state.errorUI.notify);
 
   useEffect(() => {
+    dispatch(STARTPULLING());
     if(new Date(expiryDate).getTime() <= new Date().getTime()) {
       dispatch(ISSUE_LOGOUT());
     }
@@ -32,8 +38,26 @@ function App() {
       dispatch(RELOGIN_ON_RELOAD());
       OperateLogout(newTimeout);
     }
+
+    axios.get('/pullWatches')
+    .then(res => {
+      dispatch(PULLWATCHES(res.data.watches as watchType[]))
+    })
+    .catch(err => {
+      console.log(err);
+      
+    })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
+
+  useEffect(() => {
+    if(notify) {
+      setTimeout(() => {
+        dispatch(END_NOTIFICATION());
+      }, 5000);
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [notify])
 
   const OperateLogout = (milliseconds: number) => {
     setTimeout(() => {
@@ -55,6 +79,9 @@ function App() {
       <AnimatePresence initial={false} mode="wait">
         { showAuth && <AuthModal/> }
       </AnimatePresence> 
+      <AnimatePresence initial={false} mode="wait">
+        { notify && <Notification />}
+      </AnimatePresence>
       <Footer/> 
     </div>
   )

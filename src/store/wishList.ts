@@ -3,7 +3,7 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from "./store";
 
 interface wishListStates {
-    wishListItems: {id: number, image: string, name: string, count: number, price: number}[],
+    wishListItems: {id: string, image: string, name: string, count: number, price: number, previousPrice: number}[],
     nbrOfItems: number,
     showWishList: boolean,
 }
@@ -24,7 +24,7 @@ const wishList = createSlice({
         HIDE_WISHLIST: (state) => {
             state.showWishList = false;
         },
-        ADDTOWISHLIST: (state, action: PayloadAction<{id: number, name: string, image: string, price: number}>) => {
+        ADDTOWISHLIST: (state, action: PayloadAction<{id: string, name: string, image: string, price: number, previousPrice: number}>) => {
             const theindex = state.wishListItems.findIndex(el => el.id === action.payload.id);
             if(theindex < 0) {
                 const item = { 
@@ -32,13 +32,14 @@ const wishList = createSlice({
                     name: action.payload.name, 
                     image: action.payload.image,
                     count: 1,
-                    price: action.payload.price
+                    price: action.payload.price,
+                    previousPrice: action.payload.previousPrice
                 };
                 state.wishListItems.push(item);
                 state.nbrOfItems += 1;
             }  
         },
-        DELETEITEMFROMWISHLIST: (state, action: PayloadAction<number>) => {
+        DELETEITEMFROMWISHLIST: (state, action: PayloadAction<string>) => {
             const theIndex = state.wishListItems.findIndex(el => el.id === action.payload);
             if(theIndex >= 0) {
                 state.wishListItems = state.wishListItems.filter(el => el.id !== action.payload);

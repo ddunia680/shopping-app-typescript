@@ -15,6 +15,8 @@ export const validateInput = ({value, type}: validateInputpropsTypes) => {
           if(value.length >= 3 &&  /[A-Z]/.test(value)) { return true; } else return false;
         case 'productPrice':
           if(value.length <= 5 && /^\d+$/.test(value)) { return true; } else return false;
+        case 'previousPrice':
+          if(value.length <= 5 && /^\d+$/.test(value)) { return true; } else return false;
         case 'productDescription':
           if(value.length >= 200) { return true; } else return false;
         case 'email':
