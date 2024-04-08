@@ -5,7 +5,7 @@ import { DECREMENTITEM, INCREMENTITEM } from '../../store/cart';
 import { motion } from 'framer-motion';
 
 interface cartItemType {
-    id: number,
+    id: string,
     image: string,
     name: string,
     pieces: number,
