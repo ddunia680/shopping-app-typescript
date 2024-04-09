@@ -8,6 +8,7 @@ import { CLEARCART, HIDE_CART } from '../../store/cart';
 import { useEffect, useState } from 'react';
 import WishlistItem from '../WishlistItem/wishlistItem';
 import { CLEANWISHLIST, HIDE_WISHLIST } from '../../store/wishList';
+import axios from '../../../axios';
 
 const slideInOut = {
     hidden: {
@@ -46,6 +47,7 @@ const Modal = () => {
   const wishListItems = useAppSelector(state => state.wishList.wishListItems);
   const totalPrice = useAppSelector(state => state.cartOps.totalAmount);
   const showCart = useAppSelector(state => state.cartOps.showCart);
+  const token = useAppSelector(state => state.auth.token);
   const dispatch = useAppDispatch();
 
   const [ inWishlist, setInWishlist ] = useState<boolean>(false);
@@ -56,11 +58,33 @@ const Modal = () => {
     if(!showCart) {
       setInWishlist(true);
     }
-  }, [showCart])
+  }, [showCart]);
+
+  const emptyRemoteCart = () => {
+    axios.post('dropTheCart/', null,  { headers: { Authorization: 'Bearer '+ token }})
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
 
   const emptyUIHandler = () => {
-    inWishlist ? dispatch(CLEANWISHLIST()) : dispatch(CLEARCART());
-    showCart ? dispatch(HIDE_CART()) : dispatch(HIDE_WISHLIST());
+    if(inWishlist) {
+      dispatch(CLEANWISHLIST());
+    } else {
+      dispatch(CLEARCART());
+      emptyRemoteCart();
+    }
+
+    if(showCart) {
+      dispatch(HIDE_CART())
+    } else {
+      dispatch(HIDE_WISHLIST())
+    }
+    // inWishlist ? dispatch(CLEANWISHLIST()) : dispatch(CLEARCART());
+    // showCart ? dispatch(HIDE_CART()) : dispatch(HIDE_WISHLIST());
   }
 
   const closeModal = () => {
@@ -116,7 +140,7 @@ const Modal = () => {
               <p className='mx-auto'>No Items in the cart</p> 
             : 
               cartItems.map(itm => (
-                <CartItem image={itm.image} key={itm.id} id={itm.id} name={itm.name} pieces={itm.count} />
+                <CartItem image={itm.image} key={itm.id} id={itm.id} name={itm.name} price={itm.price} pieces={itm.count} />
               ))}  
           </motion.div>
           { inWishlist ?

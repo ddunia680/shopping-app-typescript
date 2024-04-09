@@ -13,6 +13,7 @@ import { useAppSelector } from "../store/hooks";
 export default function ProductDetails() {
   const dispatch = useDispatch();
   const itemId = useParams().itemId;
+  const token = useAppSelector(state => state.auth.token);
   const [loading, setLoading ] = useState(true);
   const [productDetails, setProductDetails] = useState<watchType>();
   const [ youMightLikeList, setYouMightLikeList ] = useState<watchType[]>([]);
@@ -47,32 +48,81 @@ export default function ProductDetails() {
     })
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [itemId]);
+
+  const addItemToRemoteCart = () => {
+    if(productDetails) {
+      const theData = new FormData();
+      theData.append('itemId', productDetails._id);
+      theData.append('itemPrice', productDetails.price.toString());
+
+      axios.post('addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
+  }
+
+  const addItemToRemoteWishList = () => {
+    if(productDetails) {
+      const theData = new FormData();
+      theData.append('itemId', productDetails._id);
+
+      axios.post('addToWishList', theData, { headers: { Authorization: 'Bearer '+ token } })
+      .then(res => {
+        console.log(res);
+        
+      })
+      .catch(err => {
+        console.log(err);  
+      })
+    }
+    
+  }
+
+  const removeItemFromRemoteWishList = () => {
+    const theData = new FormData();
+    if(productDetails) {
+      theData.append('itemId', productDetails._id);
+
+      axios.post('removeFromWishList/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
+  }
   
   const addItemToCartHandler = () => {
     dispatch(SHOW_CART());
     if(productDetails) {
-      dispatch(DELETEITEMFROMWISHLIST(productDetails?._id));
+      dispatch(DELETEITEMFROMWISHLIST(productDetails._id));
       dispatch(ADDITEMTOCART({ 
-        id: productDetails?._id, 
-        name: productDetails?.name, 
-        image: productDetails?.imageURL, 
-        price: productDetails?.price, 
-        previousPrice: productDetails?.previousPrice })); 
+        id: productDetails._id, 
+        name: productDetails.name, 
+        image: productDetails.imageURL, 
+        price: productDetails.price, 
+        previousPrice: productDetails.previousPrice })); 
     }
-    
+    removeItemFromRemoteWishList();
+    addItemToRemoteCart();    
   }
 
   const addToWishList = () => {
     dispatch(SHOW_WISHLIST());
     if(productDetails) {
       dispatch(ADDTOWISHLIST({ 
-        id: productDetails?._id, 
-        name: productDetails?.name, 
-        image: productDetails?.imageURL, 
-        price: productDetails?.price, 
-        previousPrice: productDetails?.previousPrice }));
+        id: productDetails._id, 
+        name: productDetails.name, 
+        image: productDetails.imageURL, 
+        price: productDetails.price, 
+        previousPrice: productDetails.previousPrice }));
     }
-    
+    addItemToRemoteWishList();
   }
   
   return (
@@ -101,7 +151,7 @@ export default function ProductDetails() {
         onClick={() => addItemToCartHandler()}>Add to cart</button>
         <button className="py-[0.5rem] px-[1rem] bg-gradient-to-r from-pink-950 via-pink-950 to-pink-700 text-white shadow-md 
         shadow-pink-950 hover:bg-gradient-to-r hover:from-pink-950 hover:via-pink-700 hover:to-pink-950 rounded-lg duration-200 
-        hover:duration-200 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed" disabled={inWishList}
+        hover:duration-200 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed" disabled={inWishList || inCart}
         onClick={() => addToWishList()}>Add to wishList</button>
       </div>
       <div className="w-full md:w-[85%] flex flex-col justify-start items-start space-y-2">

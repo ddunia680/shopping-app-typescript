@@ -3,12 +3,14 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from "./store";
 
 interface wishListStates {
+    remoteWishList: {id: string, image: string, name: string, count: number, price: number, previousPrice: number}[],
     wishListItems: {id: string, image: string, name: string, count: number, price: number, previousPrice: number}[],
     nbrOfItems: number,
     showWishList: boolean,
 }
 
 const initialState: wishListStates = {
+    remoteWishList: [],
     wishListItems: [],
     nbrOfItems: 0,
     showWishList: false,
