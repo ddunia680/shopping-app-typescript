@@ -1,9 +1,10 @@
 import { motion } from 'framer-motion';
 import { FaCartArrowDown } from 'react-icons/fa';
 import { ImBin } from 'react-icons/im';
-import { useAppDispatch } from '../../store/hooks';
+import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { ADDITEMTOCART } from '../../store/cart';
 import { DELETEITEMFROMWISHLIST } from '../../store/wishList';
+import axios from '../../../axios';
 
 interface wishListItemType {
     id: string,
@@ -15,16 +16,47 @@ interface wishListItemType {
 }
 
 export default function WishlistItem({ id, image, name, price, previousPrice, goToCart }: wishListItemType) {
-    const dispatch = useAppDispatch();
+  const token = useAppSelector(state => state.auth.token);
+  const dispatch = useAppDispatch();
+
+    const addItemToRemoteCart = () => {
+      const theData = new FormData();
+      theData.append('itemId', id);
+      theData.append('itemPrice', price.toString());
+  
+      axios.post('addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
+
+    const removeItemFromRemoteWishList = () => {
+      const theData = new FormData();
+      theData.append('itemId', id);
+
+      axios.post('removeFromWishList/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      .then(res => {
+        console.log(res);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+    }
 
     const AdditemToCart = () => {
-        dispatch(DELETEITEMFROMWISHLIST(id));
-        dispatch(ADDITEMTOCART({ id: id, name: name, image: image, price: price, previousPrice: previousPrice }));
-        goToCart();
+      dispatch(DELETEITEMFROMWISHLIST(id));
+      dispatch(ADDITEMTOCART({ id: id, name: name, image: image, price: price, previousPrice: previousPrice }));
+      goToCart();
+      addItemToRemoteCart();
+      removeItemFromRemoteWishList();
     }
 
     const deleteItemFromList = () => {
         dispatch(DELETEITEMFROMWISHLIST(id));
+        removeItemFromRemoteWishList();
     }
 
   return (

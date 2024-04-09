@@ -8,6 +8,7 @@ import { ADDTOWISHLIST, DELETEITEMFROMWISHLIST, SHOW_WISHLIST } from '../../stor
 import { useEffect, useRef, useState } from 'react';
 import { OPEN_AUTH_MODAL } from '../../store/auth';
 import { useNavigate } from 'react-router';
+import axios from '../../../axios';
 
 type itemProps = {
     id: string,
@@ -34,15 +35,45 @@ export const ItemElement = ({ id, name, pic, price, previousPrice }: itemProps) 
     }
   }, [id, cartItems]);
 
+  const addItemToRemoteCart = () => {
+    const theData = new FormData();
+    theData.append('itemId', id);
+    theData.append('itemPrice', price.toString());
+
+    axios.post('addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+
+  const addItemToRemoteWishList = () => {
+    const theData = new FormData();
+    theData.append('itemId', id);
+
+    axios.post('addToWishList', theData, { headers: { Authorization: 'Bearer '+ token } })
+    .then(res => {
+      console.log(res);
+      
+    })
+    .catch(err => {
+      console.log(err);  
+    })
+  }
+
   const addItemToCartHandler = () => {
     dispatch(SHOW_CART());
     dispatch(DELETEITEMFROMWISHLIST(id));
     dispatch(ADDITEMTOCART({ id: id, name: name, image: pic, price: price, previousPrice: previousPrice })); 
+    addItemToRemoteCart();
   }
 
   const addToWishList = () => {
     dispatch(SHOW_WISHLIST());
     dispatch(ADDTOWISHLIST({ id: id, name: name, image: pic, price: price, previousPrice: previousPrice }));
+    addItemToRemoteWishList();
   }
 
   return (

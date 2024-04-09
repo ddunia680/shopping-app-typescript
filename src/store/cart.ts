@@ -3,6 +3,11 @@ import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from "./store";
 
 interface cartStates {
+    remoteCartItems:{
+        watch: {_id: string, imageURL: string, name: string, count: number, price: number, previousPrice: number, description: string }, 
+        count: number
+    }[],
+    remoteTotalAmount: number,
     cartItems: {id: string, image: string, name: string, count: number, price: number, previousPrice: number}[],
     totalAmount: number,
     nbrOfItems: number,
@@ -10,6 +15,8 @@ interface cartStates {
 }
 
 const initialState: cartStates = {
+    remoteCartItems: [],
+    remoteTotalAmount: 0,
     cartItems: [],
     totalAmount: 0,
     nbrOfItems: 0,
@@ -59,6 +66,14 @@ const cartOps = createSlice({
                 state.nbrOfItems -= 1;
             }
         },
+        REMOVEFROMCART: (state, action: PayloadAction<string>) => {
+            const index = state.cartItems.findIndex(el => el.id === action.payload);
+            const itemPrice = state.cartItems[index].price;
+            state.cartItems = state.cartItems.filter(itm => itm.id !== action.payload);
+            state.totalAmount -= itemPrice;
+            state.nbrOfItems -= 1;
+
+        },
         CLEARCART: (state) => {
             state.cartItems = [];
             state.totalAmount = 0;
@@ -67,7 +82,7 @@ const cartOps = createSlice({
     }
 });
 
-export const { ADDITEMTOCART, INCREMENTITEM, DECREMENTITEM, CLEARCART, SHOW_CART, HIDE_CART } = cartOps.actions;
+export const { ADDITEMTOCART, INCREMENTITEM, DECREMENTITEM, CLEARCART, SHOW_CART, HIDE_CART, REMOVEFROMCART } = cartOps.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.cartOps;
