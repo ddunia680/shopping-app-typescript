@@ -8,10 +8,32 @@ import PulseLoader from 'react-spinners/PulseLoader'
 import { ADDAWATCH } from '../store/watches';
 import { NOTIFY } from '../store/errorUI';
 import { useNavigate } from 'react-router';
+import { motion } from 'framer-motion';
 
 interface ValidateDataInputTypes {
   event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>,
   type: string,
+}
+
+const slideInOut = {
+  hidden: {
+    x: '100vw',
+    opacity: 0
+  },
+  visible: {
+    x: '0%',
+    opacity: 1,
+    transition: {
+      duration: 0.1,
+      type: 'spring',
+      damping: 30,
+      stiffness: 500
+    },
+  },
+  exit: {
+    x: '100vw',
+    opacity: 0
+  },
 }
 
 export default function AddNewProduct() { 
@@ -120,7 +142,11 @@ export default function AddNewProduct() {
 
 
   return (
-    <>
+    <motion.div 
+    variants={slideInOut}
+    initial='hidden'
+    animate='visible'
+    exit='exit'>
     { !token ? 
         <PageNotFound /> 
       :
@@ -197,6 +223,6 @@ export default function AddNewProduct() {
             />}
         </button>
     </div>}
-   </>
+   </motion.div>
   )
 }

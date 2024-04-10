@@ -37,7 +37,8 @@ export default function Home() {
   return (
     <div className="relative w-[100vw] h-[100%]">
       {!watches.length && loading ? <MainSkeleton /> : <ItemsWrapper />}
-      <div className='md:absolute static md:bottom-1 md:z-10 md:left-[45%] mx-auto bg-white shadow flex justify-center md:justify-around items-center gap-[0.5rem] px-1 rounded-full'>
+      <div className='md:absolute static md:bottom-1 md:z-10 md:left-[45%] mx-auto bg-white shadow flex justify-center md:justify-around 
+      items-center gap-[0.5rem] px-1 py-[0.1rem] rounded-full'>
             { theButtons }
       </div>
     </div>
