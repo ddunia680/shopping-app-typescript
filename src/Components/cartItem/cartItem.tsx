@@ -76,7 +76,7 @@ export const CartItem = ({ id, image, name, price, pieces }: cartItemType) => {
     }}
     className='min-h-[3rem] py-[0.7rem] md:py-[1rem] bg-gray-700 my-[0.5rem] w-[100%] flex justify-between items-center px-[0.5rem]'>
         <img src={image} alt="the image" className='w-[2rem] h-[2rem] rounded-lg bg-white object-contain'/>
-        <h3 className='font-bold text-white'>{name}</h3>
+        <h3 className='font-bold text-white'>{name.substring(0, 15).concat('...')}</h3>
         <div className='w-[4rem] md:w-[5rem] h-[100%] flex flex-row justify-between items-center'>
             <div className='p-[0.2rem] md:p-[0.3rem] rounded-lg border-[1px] border-gray-700 hover:border-white hover:text-white' 
             title='Add' onClick={() => issueIncrement()}>

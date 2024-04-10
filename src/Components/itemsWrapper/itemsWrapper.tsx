@@ -21,7 +21,7 @@ export const ItemsWrapper = () => {
     <motion.div variants={ gridContainervariants } 
     initial="hidden"
     animate="show"
-    className='px-[1rem] pt-[6rem] md:pt-[8rem] py-[1rem] flex flex-col md:flex-row justify-start items-center overflow-auto 
+    className='relative px-[1rem] pt-[6rem] md:pt-[8rem] py-[1rem] flex flex-col md:flex-row justify-start items-center overflow-auto 
     md:space-x-[1rem] space-y-[1rem] md:space-y-0'>
             { watches.map(itm => {
                 return <ItemElement name={itm.name} pic={itm.imageURL} previousPrice={itm.previousPrice} price={itm.price} key={itm._id} id={itm._id} />
