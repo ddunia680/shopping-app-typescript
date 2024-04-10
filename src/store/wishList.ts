@@ -2,15 +2,19 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from "./store";
 
+interface remoteWishList {
+    for: string,
+    wishItems: { description: string, imageURL: string, name: string, previousPrice: number, price: number, _id: string }[],
+    _id: string
+}
+
 interface wishListStates {
-    remoteWishList: {id: string, image: string, name: string, count: number, price: number, previousPrice: number}[],
     wishListItems: {id: string, image: string, name: string, count: number, price: number, previousPrice: number}[],
     nbrOfItems: number,
     showWishList: boolean,
 }
 
 const initialState: wishListStates = {
-    remoteWishList: [],
     wishListItems: [],
     nbrOfItems: 0,
     showWishList: false,
@@ -25,6 +29,13 @@ const wishList = createSlice({
         },
         HIDE_WISHLIST: (state) => {
             state.showWishList = false;
+        },
+        SETWISHLIST: (state, action: PayloadAction<remoteWishList>) => {
+            action.payload.wishItems.forEach(itm => {
+                state.wishListItems.push({ id: itm._id, image: itm.imageURL, name: itm.name, count: 0, price: itm.price, 
+                    previousPrice: itm.previousPrice });
+            })
+            state.nbrOfItems = action.payload.wishItems.length;
         },
         ADDTOWISHLIST: (state, action: PayloadAction<{id: string, name: string, image: string, price: number, previousPrice: number}>) => {
             const theindex = state.wishListItems.findIndex(el => el.id === action.payload.id);
@@ -56,7 +67,7 @@ const wishList = createSlice({
     }
 });
 
-export const { ADDTOWISHLIST, DELETEITEMFROMWISHLIST, CLEANWISHLIST, SHOW_WISHLIST, HIDE_WISHLIST } = wishList.actions;
+export const { SETWISHLIST, ADDTOWISHLIST, DELETEITEMFROMWISHLIST, CLEANWISHLIST, SHOW_WISHLIST, HIDE_WISHLIST } = wishList.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.wishList;

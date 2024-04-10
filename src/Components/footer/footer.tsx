@@ -9,7 +9,7 @@ export const Footer = () => {
   const inCartCount = useAppSelector(state => state.cartOps.nbrOfItems);
 
   return (
-    <div className='static md:absolute md:bottom-0 md:left-0 w-full flex flex-col justify-start items-start px-[1rem] bg-[#e4dfdf] border-t-[1px] border-gray-400'>
+    <div className='static xl:absolute md:bottom-0 md:left-0 w-full flex flex-col justify-start items-start px-[1rem] bg-[#e4dfdf] border-t-[1px] border-gray-400'>
         <div className='flex justify-between items-center w-full'>
           <div className='flex flex-col justify-start items-start text-[13px] md:text-[15px]'>
             <p className='font-semibold'>Total Items {inCartCount}</p>

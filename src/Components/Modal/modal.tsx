@@ -70,9 +70,20 @@ const Modal = () => {
     })
   }
 
+  const emptyRemoteWishlist = () => {
+    axios.post('dropwishlist/', null,  { headers: { Authorization: 'Bearer '+ token }})
+    .then(res => {
+      console.log(res);
+    })
+    .catch(err => {
+      console.log(err);
+    })
+  }
+
   const emptyUIHandler = () => {
     if(inWishlist) {
       dispatch(CLEANWISHLIST());
+      emptyRemoteWishlist();
     } else {
       dispatch(CLEARCART());
       emptyRemoteCart();
@@ -153,7 +164,7 @@ const Modal = () => {
             <h2 className='text-white text-lg font-semibold'>Total Amount: <span className='text-orange-200'>$ {totalPrice.toFixed(2)}
             </span></h2>
             <button className='px-[1rem] py-[0.5rem] bg-gradient-to-br from-emerald-400 to-emerald-700 text-white rounded-xl' >
-              Oder Now
+              Order Now
             </button>
           </div>
 

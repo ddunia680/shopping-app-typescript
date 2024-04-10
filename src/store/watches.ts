@@ -13,11 +13,15 @@ export type watchType = {
 interface watchesStates {
     watches: watchType[],
     loading: boolean,
+    NbrOfPages: number,
+    pageNumber: number
 }
 
 const initialState: watchesStates = {
     watches: [],
     loading: false,
+    NbrOfPages: 1,
+    pageNumber: 1
 }
 
 const watchesSlice = createSlice({
@@ -28,17 +32,26 @@ const watchesSlice = createSlice({
             state.watches.push(action.payload as watchType);
         },
 
-        PULLWATCHES: (state, action: PayloadAction<watchType[]>) => {
+        PULLWATCHES: (state, action: PayloadAction<{ watches: watchType[], nbrOfPages: number}>) => {
             state.loading = false;
-            state.watches = [...action.payload];
+            state.watches = [...action.payload.watches];
+            state.NbrOfPages = action.payload.nbrOfPages;
         },
         STARTPULLING: (state) => {
+            state.watches = [];
             state.loading = true;
+        },
+        SETPAGENUMBER: (state, action: PayloadAction<number>) => {
+            state.pageNumber = action.payload
+        },
+        SETNEWPAGE: (state, action: PayloadAction<{watches: watchType[], nbrOfPages: number}>) => {
+            state.watches = [...action.payload.watches];
+            state.NbrOfPages = action.payload.nbrOfPages;
         }
     }
 });
 
-export const { ADDAWATCH, PULLWATCHES, STARTPULLING } = watchesSlice.actions;
+export const { ADDAWATCH, PULLWATCHES, STARTPULLING, SETPAGENUMBER, SETNEWPAGE } = watchesSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.watches;

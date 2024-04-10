@@ -9,6 +9,7 @@ import { ProductDetailsSkeleton } from "../ui/productDetailsSkeleton";
 import { ADDITEMTOCART, SHOW_CART } from "../store/cart";
 import { ADDTOWISHLIST, DELETEITEMFROMWISHLIST, SHOW_WISHLIST } from "../store/wishList";
 import { useAppSelector } from "../store/hooks";
+import { OPEN_AUTH_MODAL } from "../store/auth";
 
 export default function ProductDetails() {
   const dispatch = useDispatch();
@@ -21,14 +22,14 @@ export default function ProductDetails() {
   const [ inCart, setInCart ] = useState(false);
   const cartItems = useAppSelector(state => state.cartOps.cartItems);
   const wishList = useAppSelector(state => state.wishList.wishListItems);
-  const ref = useRef<HTMLImageElement>(null)
+  const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if(productDetails) {
       const index1 = cartItems.findIndex(el => el.id === productDetails._id);      
-      const index2 = wishList.findIndex(el => el.id === productDetails._id)
-      if(index1 >= 0) setInCart(true);
-      if(index2 >= 0) setInWishList(true);
+      const index2 = wishList.findIndex(el => el.id === productDetails._id);
+      (index1 >= 0) ? setInCart(true) : setInCart(false);
+      (index2 >= 0) ? setInWishList(true) : setInWishList(false);
 
     }
   }, [cartItems, wishList, productDetails]);
@@ -147,12 +148,12 @@ export default function ProductDetails() {
       <div className="w-full flex justify-center items-center gap-[1rem] md:gap-[2rem]">
         <button className="py-[0.5rem] px-[1rem] bg-gradient-to-r from-blue-950 via-blue-950 to-blue-700 text-white shadow-md 
         shadow-blue-950 hover:bg-gradient-to-r hover:from-blue-950 hover:via-blue-700 hover:to-blue-950 rounded-lg duration-200 
-        hover:duration-200 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed" disabled={inCart}
-        onClick={() => addItemToCartHandler()}>Add to cart</button>
+        hover:duration-200 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed" disabled={inCart && token ? true : false}
+        onClick={() => { token ? addItemToCartHandler() : dispatch(OPEN_AUTH_MODAL())}}>Add to cart</button>
         <button className="py-[0.5rem] px-[1rem] bg-gradient-to-r from-pink-950 via-pink-950 to-pink-700 text-white shadow-md 
         shadow-pink-950 hover:bg-gradient-to-r hover:from-pink-950 hover:via-pink-700 hover:to-pink-950 rounded-lg duration-200 
-        hover:duration-200 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed" disabled={inWishList || inCart}
-        onClick={() => addToWishList()}>Add to wishList</button>
+        hover:duration-200 disabled:bg-gray-300 disabled:text-gray-400 disabled:cursor-not-allowed" disabled={(inWishList || inCart) && token ? true : false}
+        onClick={() => { token ? addToWishList() : dispatch(OPEN_AUTH_MODAL())}}>Add to wishList</button>
       </div>
       <div className="w-full md:w-[85%] flex flex-col justify-start items-start space-y-2">
         <h4 className="font-semibold w-full bg-gray-300 px-[1rem] rounded-md">You might also like</h4>

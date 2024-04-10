@@ -14,6 +14,8 @@ import { PULLWATCHES, STARTPULLING } from "./store/watches";
 import { watchType } from "./store/watches";
 import Notification from "./ui/notification";
 import { END_NOTIFICATION } from "./store/errorUI";
+import { SETCART } from "./store/cart";
+import { SETWISHLIST } from "./store/wishList";
 
 
 function App() {
@@ -39,9 +41,9 @@ function App() {
       OperateLogout(newTimeout);
     }
 
-    axios.get('/pullWatches')
-    .then(res => {
-      dispatch(PULLWATCHES(res.data.watches as watchType[]))
+    axios.get('/pullWatches/?page=1&limit=5')
+    .then(res => {      
+      dispatch(PULLWATCHES({watches: res.data.watches as watchType[], nbrOfPages: res.data.nbrOfPages}));
     })
     .catch(err => {
       console.log(err);
@@ -58,6 +60,31 @@ function App() {
     }
   // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [notify])
+
+  useEffect(() => {
+    if(token) {
+      axios.get('pullACart/', { headers: { Authorization: 'Bearer '+ token }})
+      .then(res => {
+          if(res.data.cart.cartItems.length) {
+            dispatch(SETCART(res.data.cart));
+          }    
+      })
+      .catch(err => {
+        console.log(err);
+      });
+
+      axios.get('pullAWishList/', { headers: { Authorization: 'Bearer '+ token }})
+      .then(res => {
+        if(res.data.wishList.wishItems.length) {
+          dispatch(SETWISHLIST(res.data.wishList)); 
+        }              
+      })
+      .catch(err => {
+        console.log(err);
+      });
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [token]);
 
   const OperateLogout = (milliseconds: number) => {
     setTimeout(() => {

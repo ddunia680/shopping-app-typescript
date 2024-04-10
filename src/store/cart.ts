@@ -2,12 +2,18 @@ import { createSlice } from "@reduxjs/toolkit";
 import type { PayloadAction } from '@reduxjs/toolkit';
 import type { RootState } from "./store";
 
-interface cartStates {
-    remoteCartItems:{
-        watch: {_id: string, imageURL: string, name: string, count: number, price: number, previousPrice: number, description: string }, 
-        count: number
+interface remoteCart {
+    cartItems: { 
+        _id: string, 
+        count: number, 
+        watch: { _id: string, imageURL: string, name: string, price: number, previousPrice: number, description: string }
     }[],
-    remoteTotalAmount: number,
+    for: string,
+    totalAmount: number,
+    _id: string
+}
+
+interface cartStates {
     cartItems: {id: string, image: string, name: string, count: number, price: number, previousPrice: number}[],
     totalAmount: number,
     nbrOfItems: number,
@@ -15,8 +21,6 @@ interface cartStates {
 }
 
 const initialState: cartStates = {
-    remoteCartItems: [],
-    remoteTotalAmount: 0,
     cartItems: [],
     totalAmount: 0,
     nbrOfItems: 0,
@@ -32,6 +36,14 @@ const cartOps = createSlice({
         },
         HIDE_CART: (state) => {
             state.showCart = false;
+        },
+        SETCART: (state, action: PayloadAction<remoteCart>) => {
+            action.payload.cartItems.forEach(itm => {
+                state.cartItems.push({ id: itm.watch._id, image: itm.watch.imageURL, name: itm.watch.name, 
+                    count: itm.count, price: itm.watch.price, previousPrice: itm.watch.previousPrice});
+                state.nbrOfItems += itm.count; 
+            })
+            state.totalAmount = action.payload.totalAmount;
         },
         ADDITEMTOCART: (state, action: PayloadAction<{ id: string, name: string, image: string, price: number, previousPrice: number }>) => {
             const theIndex = state.cartItems.findIndex(el => el.id === action.payload.id);
@@ -82,7 +94,7 @@ const cartOps = createSlice({
     }
 });
 
-export const { ADDITEMTOCART, INCREMENTITEM, DECREMENTITEM, CLEARCART, SHOW_CART, HIDE_CART, REMOVEFROMCART } = cartOps.actions;
+export const { SETCART, ADDITEMTOCART, INCREMENTITEM, DECREMENTITEM, CLEARCART, SHOW_CART, HIDE_CART, REMOVEFROMCART } = cartOps.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.cartOps;
