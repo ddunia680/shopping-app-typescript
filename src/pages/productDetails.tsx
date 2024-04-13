@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { useParams } from "react-router"
 import axios from '../../axios';
 import { watchType } from "../store/watches";
@@ -10,6 +10,28 @@ import { ADDITEMTOCART, SHOW_CART } from "../store/cart";
 import { ADDTOWISHLIST, DELETEITEMFROMWISHLIST, SHOW_WISHLIST } from "../store/wishList";
 import { useAppSelector } from "../store/hooks";
 import { OPEN_AUTH_MODAL } from "../store/auth";
+import { motion } from "framer-motion";
+
+const slideInOut = {
+  hidden: {
+    x: '100vw',
+    opacity: 0
+  },
+  visible: {
+    x: '0%',
+    opacity: 1,
+    transition: {
+      duration: 0.1,
+      type: 'spring',
+      damping: 30,
+      stiffness: 500
+    },
+  },
+  exit: {
+    x: '100vw',
+    opacity: 0
+  },
+}
 
 export default function ProductDetails() {
   const dispatch = useDispatch();
@@ -22,7 +44,6 @@ export default function ProductDetails() {
   const [ inCart, setInCart ] = useState(false);
   const cartItems = useAppSelector(state => state.cartOps.cartItems);
   const wishList = useAppSelector(state => state.wishList.wishListItems);
-  const ref = useRef<HTMLImageElement>(null);
 
   useEffect(() => {
     if(productDetails) {
@@ -33,10 +54,10 @@ export default function ProductDetails() {
 
     }
   }, [cartItems, wishList, productDetails]);
-  
+
 
   useEffect(() => {
-    ref.current?.scrollIntoView();
+    window.scrollTo(0, 0);
     axios.get(`pullAWatch/${itemId}`)
     .then(res => {
       setLoading(false);
@@ -127,13 +148,17 @@ export default function ProductDetails() {
   }
   
   return (
-    <>
+    <motion.div 
+    variants={slideInOut}
+    initial='hidden'
+    animate='visible'
+    exit='exit'>
     { loading ? 
     < ProductDetailsSkeleton /> : 
     <div className="px-[1rem] pt-[6rem] md:pt-[8rem] py-[1rem] flex flex-col justify-start items-start md:space-x-[1rem] space-y-[1rem]">
       <div id="details wrapper" className="w-full flex flex-col md:flex-row justify-center items-start gap-[2rem]">
         <div id="Image container" className=" w-[90%] h-[18rem] md:w-[17rem] md:h-[17rem] bg-[#fff] shadow rounded-lg flex justify-center items-center">
-          <img src={productDetails?.imageURL} alt={productDetails?.name} className="w-[95%] h-[95%] object-contain" ref={ref}/>
+          <img src={productDetails?.imageURL} alt={productDetails?.name} className="w-[95%] h-[95%] object-contain"/>
         </div>
         <div id="details container" className="relative w-[95%] md:w-[50%] flex flex-col justify-start items-start space-y-[2rem]">
           <h3 className="text-[22px] font-bold">{productDetails?.name}</h3>
@@ -165,7 +190,7 @@ export default function ProductDetails() {
         </div> : <p className="text-[13px] ml-[1rem]">No items to see</p>}
       </div>
     </div>}
-    </>
+    </motion.div>
   )
 }
 // Start building this ui
