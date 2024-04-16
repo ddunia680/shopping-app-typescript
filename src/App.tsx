@@ -16,6 +16,7 @@ import Notification from "./ui/notification";
 import { END_NOTIFICATION } from "./store/errorUI";
 import { SETCART } from "./store/cart";
 import { SETWISHLIST } from "./store/wishList";
+import OrderDisplay from "./Components/OrderDisplay/orderDisplay";
 
 
 function App() {
@@ -27,6 +28,7 @@ function App() {
   const showAuth = useAppSelector(state => state.auth.showAuth);
   const showCart = useAppSelector(state => state.cartOps.showCart);
   const showWishList = useAppSelector(state => state.wishList.showWishList);
+  const showOrder = useAppSelector(state => state.order.showOrder);
   const notify = useAppSelector(state => state.errorUI.notify);
 
   useEffect(() => {
@@ -107,7 +109,10 @@ function App() {
         { showAuth && <AuthModal/> }
       </AnimatePresence> 
       <AnimatePresence initial={false} mode="wait">
-        { notify && <Notification />}
+        { notify && <Notification /> }
+      </AnimatePresence>
+      <AnimatePresence initial={false} mode="wait">
+        { showOrder && <OrderDisplay /> }
       </AnimatePresence>
       <Footer/> 
     </div>

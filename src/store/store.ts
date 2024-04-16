@@ -4,6 +4,7 @@ import wishList from "./wishList";
 import authSlice from "./auth";
 import watcheSlice from "./watches";
 import errorUI from "./errorUI";
+import order from "./order";
 
 const store = configureStore({
     reducer: {
@@ -12,6 +13,7 @@ const store = configureStore({
         auth: authSlice,
         watches: watcheSlice,
         errorUI: errorUI,
+        order: order,
     }
 });
 

@@ -11,8 +11,8 @@ export const router = createBrowserRouter([
         element: <App />,
         children: [
             {path: "", element: <Home />},
-            {path: "AddItem", element: <AnimatePresence initial={false} mode="wait" ><AddNewProduct /></AnimatePresence> },
-            {path: "productDetail/:itemId", element: <AnimatePresence initial={false} mode="wait" ><ProductDetails /></AnimatePresence> },
+            {path: "AddItem", element: <AddNewProduct /> },
+            {path: "productDetail/:itemId", element: <AnimatePresence><ProductDetails /></AnimatePresence> },
         ]
     }
 ])

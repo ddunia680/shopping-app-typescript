@@ -1,5 +1,6 @@
 // import React from 'react'
 import { ArrowLeftIcon, TrashIcon } from '@heroicons/react/24/solid';
+import PulseLoader from 'react-spinners/PulseLoader';
 import { CartItem } from '../cartItem/cartItem';
 import Backdrop from '../Backdrop/backdrop';
 import { motion } from 'framer-motion';
@@ -9,6 +10,8 @@ import { useEffect, useState } from 'react';
 import WishlistItem from '../WishlistItem/wishlistItem';
 import { CLEANWISHLIST, HIDE_WISHLIST } from '../../store/wishList';
 import axios from '../../../axios';
+import { NOTIFY } from '../../store/errorUI';
+import { DISPLAY_ORDER } from '../../store/order';
 
 const slideInOut = {
     hidden: {
@@ -43,6 +46,7 @@ const gridContainervariants = {
 }
 
 const Modal = () => {
+  const [ loading, setLoading ] = useState(false); 
   const cartItems = useAppSelector(state => state.cartOps.cartItems);
   const wishListItems = useAppSelector(state => state.wishList.wishListItems);
   const totalPrice = useAppSelector(state => state.cartOps.totalAmount);
@@ -71,7 +75,7 @@ const Modal = () => {
   }
 
   const emptyRemoteWishlist = () => {
-    axios.post('dropwishlist/', null,  { headers: { Authorization: 'Bearer '+ token }})
+    axios.post('dropwishlist/', null, { headers: { Authorization: 'Bearer '+ token }})
     .then(res => {
       console.log(res);
     })
@@ -107,6 +111,29 @@ const Modal = () => {
   }
 
   const goToCart = () => setInWishlist(false);
+
+  const makeAnOrder = () => {
+    setLoading(true);
+    axios.get('issueOrder/', { headers: { Authorization: 'Bearer '+ token }})
+    .then(res => {
+      setLoading(false);
+      dispatch(CLEARCART());
+      closeModal();
+      console.log(res.data.order);
+      const thePulledOrder = res.data.order;
+      dispatch(DISPLAY_ORDER({ showOrder: true, orderId: thePulledOrder._id, customerName: thePulledOrder.customer.username, 
+        items: thePulledOrder.items, totalAmount: thePulledOrder.totalAmount 
+      }));
+      
+    })
+    .catch(err => {
+      setLoading(false);
+      dispatch(NOTIFY({ message: err.response?.data.message, isError: true }))
+      closeModal();
+      console.log(err);
+      
+    })
+  }
 
   return (
     <Backdrop onClick={() => closeModal()}>
@@ -163,8 +190,15 @@ const Modal = () => {
           '>
             <h2 className='text-white text-lg font-semibold'>Total Amount: <span className='text-orange-200'>$ {totalPrice.toFixed(2)}
             </span></h2>
-            <button className='px-[1rem] py-[0.5rem] bg-gradient-to-br from-emerald-400 to-emerald-700 text-white rounded-xl' >
-              Order Now
+            <button className='px-[1rem] py-[0.5rem] bg-gradient-to-br from-emerald-400 to-emerald-700  border-[2px] text-white 
+            rounded-xl hover:from-pink-950 hover:border-emerald-700 flex justify-start items-end disabled:cursor-not-allowed 
+            disabled:from-gray-400' disabled={cartItems.length ? false : true} onClick={() => makeAnOrder()}>
+              <span>Order Now</span>
+              { loading && <PulseLoader 
+                  color={"#ffff"}
+                  loading={true}
+                  size={3}
+              />}
             </button>
           </div>
 

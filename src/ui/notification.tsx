@@ -33,7 +33,7 @@ export default function Notification() {
       initial='hidden'
       animate='visible'
       exit='exit'
-      className={["absolute bottom-[2rem] md:bottom-[5rem] right-1 z-100 shadow rounded-md p-[0.5rem] flex flex-col justify-start items-start", isError ? 'bg-red-200 shadow-red-500' : 'bg-gray-200 shadow-gray-500'].join(' ')}>
+      className={["absolute bottom-[2rem] md:bottom-[5rem] right-1 z-1000 shadow rounded-md p-[0.5rem] flex flex-col justify-start items-start", isError ? 'bg-red-200 shadow-red-500' : 'bg-gray-200 shadow-gray-500'].join(' ')}>
       <h2 className="font-semibold text-[15px] md:text-[17px] flex justify-start items-center gap-1">Notification { isError && <TiWarning size={30} className='text-red-600' />}</h2>
       <p className="text-[12px] text-gray-600 font-thin">{notificationText}</p>
     </motion.div>
