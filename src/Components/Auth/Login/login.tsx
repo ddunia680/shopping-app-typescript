@@ -123,7 +123,7 @@ export default function Login({ signUp, forgotPass }: propsTypes) {
       thedata.append('username', username);
       thedata.append('password', password);
 
-      axios.post('auth/login', thedata)
+      axios.post('/auth/login', thedata)
       .then(res => {
         setLoading(false);
         const theAuthData = res.data!;
@@ -155,7 +155,7 @@ export default function Login({ signUp, forgotPass }: propsTypes) {
       enteredOTP && setEnteredOTP('');
       setLoading(true);
 
-      axios.post(`auth/requestOTp/${email}`)
+      axios.post(`/auth/requestOTp/${email}`)
       .then(res => {
         setLoading(false);
         setEmailIsAlreadyIn(true);
@@ -177,7 +177,7 @@ export default function Login({ signUp, forgotPass }: propsTypes) {
       otpErrorMessage && setOtpErrorMessage('');
       setLoading(true);
 
-      axios.post(`auth/verify/${email}/${enteredOTP}`)
+      axios.post(`/auth/verify/${email}/${enteredOTP}`)
       .then(res => {
         setLoading(false);
         console.log(res);

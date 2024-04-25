@@ -40,7 +40,7 @@ export const ItemElement = ({ id, name, pic, price, previousPrice }: itemProps) 
     theData.append('itemId', id);
     theData.append('itemPrice', price.toString());
 
-    axios.post('addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
+    axios.post('/addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
     .then(res => {
       console.log(res);
     })
@@ -53,7 +53,7 @@ export const ItemElement = ({ id, name, pic, price, previousPrice }: itemProps) 
     const theData = new FormData();
     theData.append('itemId', id);
 
-    axios.post('addToWishList', theData, { headers: { Authorization: 'Bearer '+ token } })
+    axios.post('/addToWishList', theData, { headers: { Authorization: 'Bearer '+ token } })
     .then(res => {
       console.log(res);
       

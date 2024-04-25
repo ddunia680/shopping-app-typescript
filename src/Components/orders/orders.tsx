@@ -33,7 +33,7 @@ export default function Orders() {
     useEffect(() => {
         if(selectedOrderId) {
             setEnteredValue('');
-            axios.get(`admin/pullAnOrder/${selectedOrderId}`, { headers: { Authorization: 'Bearer '+ token } })
+            axios.get(`/admin/pullAnOrder/${selectedOrderId}`, { headers: { Authorization: 'Bearer '+ token } })
             .then(res => {
                 setSelectedOrder(res.data.order);
             })
@@ -47,7 +47,7 @@ export default function Orders() {
 
 
     const searchOrders = (value: string) => {
-        axios.get(`admin/searchOrder/${value}`, { headers: { Authorization: 'Bearer '+ token } })
+        axios.get(`/admin/searchOrder/${value}`, { headers: { Authorization: 'Bearer '+ token } })
         .then(res => {
             setSearchResults(res.data.orders)
         })
@@ -58,7 +58,7 @@ export default function Orders() {
 
     const deliveredOrder = () => {
         setLoading(true);
-        axios.get(`admin/deliveredOrder/${selectedOrderId}`, { headers: { Authorization: 'Bearer '+ token } })
+        axios.get(`/admin/deliveredOrder/${selectedOrderId}`, { headers: { Authorization: 'Bearer '+ token } })
         .then(res => {
             setLoading(false);
             setSelectedOrder(res.data.order)

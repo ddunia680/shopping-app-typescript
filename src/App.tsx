@@ -65,7 +65,7 @@ function App() {
 
   useEffect(() => {
     if(token) {
-      axios.get('pullACart/', { headers: { Authorization: 'Bearer '+ token }})
+      axios.get('/pullACart/', { headers: { Authorization: 'Bearer '+ token }})
       .then(res => {
           if(res.data.cart.cartItems.length) {
             dispatch(SETCART(res.data.cart));
@@ -75,7 +75,7 @@ function App() {
         console.log(err);
       });
 
-      axios.get('pullAWishList/', { headers: { Authorization: 'Bearer '+ token }})
+      axios.get('/pullAWishList/', { headers: { Authorization: 'Bearer '+ token }})
       .then(res => {
         if(res.data.wishList.wishItems.length) {
           dispatch(SETWISHLIST(res.data.wishList)); 

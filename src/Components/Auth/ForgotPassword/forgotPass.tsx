@@ -113,7 +113,7 @@ export default function ForgotPass({ signIn }: propsTypes) {
         enteredOTP && setEnteredOTP('');
         setLoading(true);
   
-        axios.post(`auth/requestOTp/${email}`)
+        axios.post(`/auth/requestOTp/${email}`)
         .then(res => {
           setLoading(false);
           setEmailIsAlreadyIn(true);
@@ -135,7 +135,7 @@ export default function ForgotPass({ signIn }: propsTypes) {
         otpErrorMessage && setOtpErrorMessage('');
         setLoading(true);
   
-        axios.post(`auth/verify/${email}/${enteredOTP}`)
+        axios.post(`/auth/verify/${email}/${enteredOTP}`)
         .then(res => {
           setLoading(false);
           console.log(res);
@@ -163,7 +163,7 @@ export default function ForgotPass({ signIn }: propsTypes) {
         data.append('password', password);
         data.append('confPass', confPass);
 
-        axios.post('auth/updatePass', data)
+        axios.post('/auth/updatePass', data)
         .then(res => {
             setLoading(false);
             console.log(res);

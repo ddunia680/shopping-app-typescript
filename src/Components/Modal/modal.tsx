@@ -65,7 +65,7 @@ const Modal = () => {
   }, [showCart]);
 
   const emptyRemoteCart = () => {
-    axios.post('dropTheCart/', null,  { headers: { Authorization: 'Bearer '+ token }})
+    axios.post('/dropTheCart/', null,  { headers: { Authorization: 'Bearer '+ token }})
     .then(res => {
       console.log(res);
     })
@@ -75,7 +75,7 @@ const Modal = () => {
   }
 
   const emptyRemoteWishlist = () => {
-    axios.post('dropwishlist/', null, { headers: { Authorization: 'Bearer '+ token }})
+    axios.post('/dropwishlist/', null, { headers: { Authorization: 'Bearer '+ token }})
     .then(res => {
       console.log(res);
     })
@@ -114,7 +114,7 @@ const Modal = () => {
 
   const makeAnOrder = () => {
     setLoading(true);
-    axios.get('issueOrder/', { headers: { Authorization: 'Bearer '+ token }})
+    axios.get('/issueOrder/', { headers: { Authorization: 'Bearer '+ token }})
     .then(res => {
       setLoading(false);
       dispatch(CLEARCART());

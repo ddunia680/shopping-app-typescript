@@ -86,7 +86,7 @@ export default function AddNewProduct() {
     theData.append('previousPrice', previousPrice);
     theData.append('description', productDescription);
 
-    axios.post('admin/createItem', theData, { headers: { Authorization: 'Bearer '+ token } })
+    axios.post('/admin/createItem', theData, { headers: { Authorization: 'Bearer '+ token } })
     .then(res => {
       setLoading(false);
       navigate(`/productDetail/${res.data.watch._id}`);

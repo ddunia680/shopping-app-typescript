@@ -24,7 +24,7 @@ export const CartItem = ({ id, image, name, price, pieces }: cartItemType) => {
     theData.append('itemPrice', price.toString());
 
 
-    axios.post('removeFromCart/', theData, { headers: { Authorization: 'Bearer '+ token }})
+    axios.post('/removeFromCart/', theData, { headers: { Authorization: 'Bearer '+ token }})
     .then(res => {
       console.log(res);
     })
@@ -40,7 +40,7 @@ export const CartItem = ({ id, image, name, price, pieces }: cartItemType) => {
       theData.append('itemPrice', price.toString());
 
       dispatch(DECREMENTITEM(id));
-      axios.post('decrementCartItem/', theData, { headers: { Authorization: 'Bearer '+ token }})
+      axios.post('/decrementCartItem/', theData, { headers: { Authorization: 'Bearer '+ token }})
       .then(res => {
         console.log(res);
       })
@@ -60,7 +60,7 @@ export const CartItem = ({ id, image, name, price, pieces }: cartItemType) => {
     theData.append('itemPrice', price.toString());
 
     dispatch(INCREMENTITEM(id));
-    axios.post('incrementCartItem/', theData, { headers: { Authorization: 'Bearer '+ token }})
+    axios.post('/incrementCartItem/', theData, { headers: { Authorization: 'Bearer '+ token }})
     .then(res => {
       console.log(res);
     })
