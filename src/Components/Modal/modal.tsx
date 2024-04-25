@@ -121,8 +121,10 @@ const Modal = () => {
       closeModal();
       console.log(res.data.order);
       const thePulledOrder = res.data.order;
-      dispatch(DISPLAY_ORDER({ showOrder: true, orderId: thePulledOrder._id, customerName: thePulledOrder.customer.username, 
-        items: thePulledOrder.items, totalAmount: thePulledOrder.totalAmount 
+      dispatch(DISPLAY_ORDER({
+        showOrder: true, orderId: thePulledOrder._id, customerName: thePulledOrder.customer.username,
+        items: thePulledOrder.items, totalAmount: thePulledOrder.totalAmount,
+        orderSelected: ''
       }));
       
     })

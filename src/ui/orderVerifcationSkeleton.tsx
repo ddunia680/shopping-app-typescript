@@ -1,4 +1,3 @@
-import React from 'react'
 import { PiImageSquareFill } from "react-icons/pi";
 
 export default function OrderVerifcationSkeleton() {

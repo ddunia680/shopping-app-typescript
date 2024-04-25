@@ -9,7 +9,7 @@ import { useAppDispatch, useAppSelector } from '../../store/hooks';
 import { NOTIFY } from '../../store/errorUI';
 const yearMonths = [ 'Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'Jul', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
 
-interface orderTypes {
+interface myOrderTypes {
     _id: string,
     createdAt: Date,
     delivered: boolean,
@@ -27,7 +27,7 @@ export default function Orders() {
     const [searchResults, setSearchResults] = useState([]);
     const selectedOrderId = useAppSelector(state => state.order.orderSelected);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const [selectedOrder, setSelectedOrder] = useState<orderTypes | any>({});
+    const [selectedOrder, setSelectedOrder] = useState<myOrderTypes | any>({});
     
 
     useEffect(() => {
@@ -82,7 +82,7 @@ export default function Orders() {
             { enteredvalue && 
             <div className='absolute top-[3rem] md:top-[4rem] bg-white w-[80%] md:w-[40%] rounded-lg flex flex-col 
             justify-start items-center gap-1 z-[10000] shadow-sm shadow-black'>
-                {searchResults.length && enteredvalue ? searchResults.map((el: orderTypes) => (
+                {searchResults.length && enteredvalue ? searchResults.map((el: myOrderTypes) => (
                     <OrderSearchItem key={el._id} id={el._id} pic={el.items[0].watch.imageURL} username={el.customer.username} delivered={el.delivered} date={el.createdAt} />
                 ))
                 : !searchResults.length && enteredvalue ? <OrderSearchItmSkeleton /> : null }
