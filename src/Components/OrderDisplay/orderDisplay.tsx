@@ -51,7 +51,7 @@ export default function OrderDisplay() {
     <motion.div variants={slideInOut}
     initial='hidden'
     animate='visible'
-    exit='exit' className='absolute w-[90%] h-[30rem] md:w-[20rem] shadow-lg shadow-black bottom-1 md:right-1 right-[5%] bg-[#0d1117]/90 
+    exit='exit' className='absolute w-[90%] h-[30rem] md:w-[20rem] shadow-lg shadow-black bottom-1 md:bottom-[5rem] md:right-1 right-[5%] bg-[#0d1117]/90 
     z-99999 rounded-lg flex flex-col justify-center items-center py-1 gap-[1rem] backdrop-blur-sm'>
       <p className="text-md font-semibold text-white w-[70%] flex justify-between items-center">
         <span>Your Order</span> 
