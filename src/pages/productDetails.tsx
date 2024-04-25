@@ -58,7 +58,7 @@ export default function ProductDetails() {
 
   useEffect(() => {
     window.scrollTo(0, 0);
-    axios.get(`pullAWatch/${itemId}`)
+    axios.get(`/pullAWatch/${itemId}`)
     .then(res => {
       setLoading(false);
       setProductDetails(res.data.watch);
@@ -77,7 +77,7 @@ export default function ProductDetails() {
       theData.append('itemId', productDetails._id);
       theData.append('itemPrice', productDetails.price.toString());
 
-      axios.post('addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      axios.post('/addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
       .then(res => {
         console.log(res);
       })
@@ -92,7 +92,7 @@ export default function ProductDetails() {
       const theData = new FormData();
       theData.append('itemId', productDetails._id);
 
-      axios.post('addToWishList', theData, { headers: { Authorization: 'Bearer '+ token } })
+      axios.post('/addToWishList', theData, { headers: { Authorization: 'Bearer '+ token } })
       .then(res => {
         console.log(res);
         
@@ -109,7 +109,7 @@ export default function ProductDetails() {
     if(productDetails) {
       theData.append('itemId', productDetails._id);
 
-      axios.post('removeFromWishList/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      axios.post('/removeFromWishList/', theData, { headers: { Authorization: 'Bearer '+ token } })
       .then(res => {
         console.log(res);
       })

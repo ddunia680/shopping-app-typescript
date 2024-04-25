@@ -24,7 +24,7 @@ export default function WishlistItem({ id, image, name, price, previousPrice, go
       theData.append('itemId', id);
       theData.append('itemPrice', price.toString());
   
-      axios.post('addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      axios.post('/addToCart/', theData, { headers: { Authorization: 'Bearer '+ token } })
       .then(res => {
         console.log(res);
       })
@@ -37,7 +37,7 @@ export default function WishlistItem({ id, image, name, price, previousPrice, go
       const theData = new FormData();
       theData.append('itemId', id);
 
-      axios.post('removeFromWishList/', theData, { headers: { Authorization: 'Bearer '+ token } })
+      axios.post('/removeFromWishList/', theData, { headers: { Authorization: 'Bearer '+ token } })
       .then(res => {
         console.log(res);
       })

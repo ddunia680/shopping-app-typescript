@@ -140,7 +140,7 @@ export default function Signup({ signIn }: propsTypes) {
         data.append('password', password);
         data.append('confPass', confPass);
 
-        axios.post('auth/signup', data)
+        axios.post('/auth/signup', data)
         .then(response => {
             setLoading(false);
             console.log(response);
@@ -171,7 +171,7 @@ export default function Signup({ signIn }: propsTypes) {
     const issueOTPVerification = async () => {
         otpErrorMessage && setOtpErrorMessage('');
         setLoading(true);
-        axios.post(`auth/verify/${createdUser?.email}/${enteredOTP}`)
+        axios.post(`/auth/verify/${createdUser?.email}/${enteredOTP}`)
         .then(response => {
             setLoading(false);
             console.log(response);
@@ -192,7 +192,7 @@ export default function Signup({ signIn }: propsTypes) {
         setOtpDelayValue(60);
         setCounting(true);
 
-        axios.post(`auth/requestOTp/${createdUser?.email}`)
+        axios.post(`/auth/requestOTp/${createdUser?.email}`)
         .then(res => {
             setResentOTP(true);
             setResendOTPLoading(false);
