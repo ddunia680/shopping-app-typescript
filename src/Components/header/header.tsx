@@ -4,8 +4,9 @@ import logo from '../../assets/o_logo.png';
 import { FaUserCircle } from 'react-icons/fa';
 import { useState } from 'react';
 import { ISSUE_LOGOUT, OPEN_AUTH_MODAL, OPEN_AUTH_THROUGH_CART } from '../../store/auth';
-import { SHOW_CART } from '../../store/cart';
+import { CLEARCART, SHOW_CART } from '../../store/cart';
 import { Link } from 'react-router-dom';
+import { CLEANWISHLIST } from '../../store/wishList';
 
 export const Header = () => {
   const dispatch = useAppDispatch();
@@ -18,6 +19,12 @@ export const Header = () => {
   const authThroughCart = () => {
     dispatch(OPEN_AUTH_THROUGH_CART())
     dispatch(OPEN_AUTH_MODAL());
+  }
+
+  const logout = () => {
+    dispatch(CLEANWISHLIST());
+    dispatch(CLEARCART());
+    dispatch(ISSUE_LOGOUT());
   }
   
   return (
@@ -37,10 +44,12 @@ export const Header = () => {
                   <div className='absolute bg-gray-700 top-[3rem] md:top-[5rem] right-1 rounded-lg cursor-pointer flex flex-col 
                   justify-start items-center z-[1000] border-[1px] border-gray-400 p-1' 
                   >
-                      <Link to='/AddItem' className='text-[12px] md:text-[15px] text-center flex justify-center items-center gap-1 
-                      hover:bg-white hover:text-black px-1' onClick={() => showLogoutB && setShowLogoutB(false)}> <span>New</span> <span>product?</span></Link>
-                      <p className='text-[12px] md:text-[15px] hover:bg-red-600 w-full text-center' title='Logout?' 
-                        onClick={() => token && dispatch(ISSUE_LOGOUT())}>Logout?</p>
+                      { username === 'Dunia Dunia' && <Link to='/addItem' className='text-[12px] md:text-[15px] text-center flex justify-center items-center gap-1 
+                      hover:bg-white hover:text-black px-1' onClick={() => showLogoutB && setShowLogoutB(false)}> <span>New</span> <span>product?</span></Link>}
+                      { username === 'Dunia Dunia' && <Link to='/orders' className='w-full text-[12px] md:text-[15px] text-center flex justify-center items-center gap-1 
+                      hover:bg-white hover:text-black px-1' onClick={() => showLogoutB && setShowLogoutB(false)}> Orders</Link>}
+                      <p className=' px-[1rem] text-[12px] md:text-[15px] hover:bg-red-600 w-full text-center' title='Logout?' 
+                        onClick={() => token && logout()}>Logout?</p>
                   </div> 
                   : null}
               </div>

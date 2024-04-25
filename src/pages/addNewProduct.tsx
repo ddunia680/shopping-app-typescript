@@ -20,6 +20,7 @@ export default function AddNewProduct() {
   const [windowWidth] = useState(window.innerWidth);
   const fileInputRef = useRef<HTMLInputElement>(null);
   const token = useAppSelector(state => state.auth.token);
+  const username = useAppSelector(state => state.auth.username);
   
   const [ productImage, setProductImage ] = useState<File | null>();
   const [ productTitle, setProductTitle ] = useState('');
@@ -121,7 +122,7 @@ export default function AddNewProduct() {
 
   return (
     <>
-    { !token ? 
+    { !token && username !== 'Dunia Dunia' ? 
         <PageNotFound /> 
       :
       <div className="relativew-full h-[100%] pt-[5rem] md:pt-[7rem] flex flex-col justify-start items-center pb-[2rem] gap-[2rem]">

@@ -8,7 +8,7 @@ interface orderTypes {
     customerName: string,
     items: {count: number, _id: string,  watch: { _id: string, description: string, imageURL: string, name: string, previousPrice: number, price: number }}[],
     totalAmount: number,
-
+    orderSelected: string,
 }
 
 const initialState: orderTypes = {
@@ -17,6 +17,7 @@ const initialState: orderTypes = {
     customerName: '',
     items: [],
     totalAmount: 0,
+    orderSelected: '',
 }
 
 const orderSlice = createSlice({
@@ -36,11 +37,14 @@ const orderSlice = createSlice({
             state.customerName = '';
             state.items = [];
             state.totalAmount = 0;
+        },
+        DEFINE_SELECTED_ORDER: (state, action: PayloadAction<string>) => {
+            state.orderSelected = action.payload
         }
     }
 });
 
-export const { DISPLAY_ORDER, CLOSE_ORDER } = orderSlice.actions;
+export const { DISPLAY_ORDER, CLOSE_ORDER, DEFINE_SELECTED_ORDER } = orderSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectCount = (state: RootState) => state.order;
